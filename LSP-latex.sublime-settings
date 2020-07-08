@@ -11,6 +11,7 @@
 	],
 	"initializationOptions": {},
 	// @see https://texlab.netlify.app/docs/reference/configuration
+	// @see https://github.com/latex-lsp/texlab-vscode/blob/master/package.json
 	"settings": {
 		//////////////////////////
 		// LaTex configurations //
