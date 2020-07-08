@@ -39,7 +39,9 @@ def get_plugin_cache_dir() -> str:
 
 
 @lru_cache()
-def get_server_download_url(version: str, arch: str, platform: str) -> Optional[str]:
+def get_server_download_url(
+    version: str, arch: str = sublime.arch(), platform: str = sublime.platform(),
+) -> Optional[str]:
     """
     @brief Get the LSP server download URL.
 
@@ -147,10 +149,11 @@ class LspLatexPlugin(AbstractPlugin):
         cls.cleanup_cache()
 
         server_dir = get_server_dir()
-        download_url = get_server_download_url(TEXLAB_VERSION, sublime.arch(), sublime.platform())
+        download_url = get_server_download_url(TEXLAB_VERSION)
         tarball_name = download_url.split("/")[-1]
         tarball_path = os.path.join(server_dir, tarball_name)
 
+        # download the platform-specific LSP server tarball
         response = requests.get(download_url, stream=True)
         with open(tarball_path, "wb") as f:
             for chunk in response.iter_content(chunk_size=8192):
