@@ -147,6 +147,15 @@ class LspLatexPlugin(AbstractPlugin):
     @classmethod
     def install_or_update(cls) -> None:
         cls.cleanup_cache()
+        cls.download_server_bin()
+
+    @classmethod
+    def download_server_bin(cls) -> None:
+        """
+        @brief Download the LSP server binary.
+
+        @param cls The cls
+        """
 
         server_dir = get_server_dir()
         download_url = get_server_download_url(TEXLAB_VERSION)

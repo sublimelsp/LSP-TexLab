@@ -7,6 +7,13 @@ from LSP.plugin.core.typing import Optional
 
 
 def decompress(tarball: str, dst_dir: Optional[str] = None) -> None:
+    """
+    @brief Decompress the tarball.
+
+    @param tarball The tarball
+    @param dst_dir The destination directory
+    """
+
     if not dst_dir:
         dst_dir = os.path.dirname(tarball)
 
