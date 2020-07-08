@@ -1,0 +1,42 @@
+{
+	"languages": [
+		{
+			"languageId": "latex",
+			"document_selector": "text.tex",
+		},
+		{
+			"languageId": "bibtex",
+			"document_selector": "text.bibtex",
+		},
+	],
+	"initializationOptions": {},
+	// @see https://texlab.netlify.app/docs/reference/configuration
+	"settings": {
+		//////////////////////////
+		// LaTex configurations //
+		//////////////////////////
+		"latex.rootDirectory": null,
+		"latex.build.executable": "latexmk",
+		"latex.build.args": [
+			"-pdf",
+			"-interaction=nonstopmode",
+			"-synctex=1",
+			"%f",
+		],
+		"latex.build.onSave": false,
+		"latex.build.outputDirectory": ".",
+		"latex.build.forwardSearchAfter": false,
+		"latex.forwardSearch.executable": null,
+		"latex.forwardSearch.args": [],
+		"latex.lint.onSave": true,
+		"latex.lint.onChange": false,
+		"latex.server.autoDownload": false,
+		"latex.server.trace": false,
+		"latex.server.logFile": null,
+		///////////////////////////
+		// BibTeX configurations //
+		///////////////////////////
+		"bibtex.formatting.formatter": "texlab",
+		"bibtex.formatting.lineLength": 120,
+	},
+}
