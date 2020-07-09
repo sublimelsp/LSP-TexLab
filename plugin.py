@@ -7,9 +7,9 @@ import sublime
 from .const import PLUGIN_NAME, SETTINGS_FILENAME, TEXLAB_VERSION
 from .server import (
     get_plugin_cache_dir,
-    get_server_download_url,
-    get_server_dir,
     get_server_bin_path,
+    get_server_dir,
+    get_server_download_url,
     is_plugin_supported,
 )
 from .tarball import decompress
