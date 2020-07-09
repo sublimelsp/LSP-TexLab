@@ -1,4 +1,7 @@
 {
+	//////////////////
+	// LSP settings //
+	//////////////////
 	"languages": [
 		{
 			"languageId": "latex",
@@ -40,4 +43,9 @@
 		"bibtex.formatting.formatter": "texlab",
 		"bibtex.formatting.lineLength": 120,
 	},
+	//////////////////////
+	// non-LSP settings //
+	//////////////////////
+	// If you have a problem connecting to GitHub, you may change the URL to a GitHub mirror.
+	"lsp_server_download_url": "https://github.com/latex-lsp/texlab/releases/download/{version}/{tarball}",
 }

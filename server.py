@@ -3,7 +3,7 @@ import sublime
 
 from functools import lru_cache
 
-from .const import ARCH, PLATFORM, PLUGIN_NAME, TEXLAB_VERSION
+from .const import ARCH, PLATFORM, PLUGIN_NAME, SETTINGS_FILENAME, TEXLAB_VERSION
 from LSP.plugin.core.typing import Optional
 
 
@@ -32,18 +32,22 @@ def get_server_download_url(
     @return The LSP server download URL.
     """
 
-    url_pattern = "https://github.com/latex-lsp/texlab/releases/download/{}/{}"
+    settings = sublime.load_settings(SETTINGS_FILENAME)
+    url = settings.get("lsp_server_download_url", "")  # type: str
 
     if arch == "x64" and platform == "osx":
-        tarball_name = "texlab-x86_64-macos.tar.gz"
+        tarball = "texlab-x86_64-macos.tar.gz"
     elif arch == "x64" and platform == "linux":
-        tarball_name = "texlab-x86_64-linux.tar.gz"
+        tarball = "texlab-x86_64-linux.tar.gz"
     elif arch == "x64" and platform == "windows":
-        tarball_name = "texlab-x86_64-windows.zip"
+        tarball = "texlab-x86_64-windows.zip"
     else:
+        tarball = ""
+
+    if not url or not tarball:
         return None
 
-    return url_pattern.format(version, tarball_name)
+    return url.format_map({"version": version, "tarball": tarball})
 
 
 @lru_cache()
