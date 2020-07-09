@@ -16,11 +16,11 @@
                 "id": "lsp-servers",
                 "children": [
                   {
-                    "caption": "LSP-latex",
+                    "caption": "LSP-TexLab",
                     "command": "edit_settings",
                     "args": {
-                      "base_file": "${packages}/LSP-latex/LSP-latex.sublime-settings",
-                      "default": "// Settings in here override those in \"LSP-latex/LSP-latex.sublime-settings\"\n\n{\n\t$0\n}\n",
+                      "base_file": "${packages}/LSP-TexLab/LSP-TexLab.sublime-settings",
+                      "default": "// Settings in here override those in \"LSP-TexLab/LSP-TexLab.sublime-settings\"\n\n{\n\t$0\n}\n",
                     },
                   },
                 ],

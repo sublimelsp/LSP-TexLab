@@ -1,0 +1,10 @@
+[
+    {
+        "caption": "Preferences: LSP-TexLab Settings",
+        "command": "edit_settings",
+        "args": {
+            "base_file": "${packages}/LSP-TexLab/LSP-TexLab.sublime-settings",
+            "default": "// Settings in here override those in \"LSP-TexLab/LSP-TexLab.sublime-settings\"\n\n{\n\t$0\n}\n",
+        },
+    },
+]

@@ -27,7 +27,7 @@ def plugin_unloaded() -> None:
     pass
 
 
-class LspLatexPlugin(AbstractPlugin):
+class LspTexLabPlugin(AbstractPlugin):
     @classmethod
     def name(cls) -> str:
         return PLUGIN_NAME
