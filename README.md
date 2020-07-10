@@ -17,3 +17,14 @@ There are some ways to configure the package and the language server.
 
 - From `Preferences > Package Settings > LSP > Servers > LSP-TexLab`
 - From the command palette `Preferences: LSP-TexLab Settings`
+
+## For Plugin Developer
+
+The targeted version of `texlab` is defined in `const.py`.
+
+```py
+# @see https://github.com/latex-lsp/texlab/releases
+TEXLAB_VERSION = "v2.2.0"
+```
+
+If that version is not found on the machine, this plugin will try to download it.
