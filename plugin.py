@@ -77,6 +77,7 @@ class LspTexLabPlugin(AbstractPlugin):
         tarball_path = os.path.join(server_dir, tarball_name)
 
         # download the platform-specific LSP server tarball
+        os.makedirs(os.path.dirname(tarball_path), exist_ok=True)
         response = requests.get(download_url, stream=True)
         with open(tarball_path, "wb") as f:
             for chunk in response.iter_content(chunk_size=8192):
@@ -93,4 +94,3 @@ class LspTexLabPlugin(AbstractPlugin):
         """
 
         shutil.rmtree(get_plugin_cache_dir(), ignore_errors=True)
-        os.makedirs(get_server_dir(), exist_ok=True)
