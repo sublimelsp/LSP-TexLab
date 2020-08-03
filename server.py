@@ -19,9 +19,7 @@ def get_plugin_cache_dir() -> str:
 
 
 @lru_cache
-def get_server_download_url(
-    version: str, arch: str = ARCH, platform: str = PLATFORM,
-) -> Optional[str]:
+def get_server_download_url(version: str, arch: str, platform: str) -> Optional[str]:
     """
     @brief Get the LSP server download URL.
 

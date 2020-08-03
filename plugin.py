@@ -4,7 +4,7 @@ import shutil
 import sublime
 
 
-from .const import PLUGIN_NAME, SETTINGS_FILENAME, TEXLAB_VERSION
+from .const import ARCH, PLATFORM, PLUGIN_NAME, SETTINGS_FILENAME, TEXLAB_VERSION
 from .server import (
     get_plugin_cache_dir,
     get_server_bin_path,
@@ -72,7 +72,7 @@ class LspTexLabPlugin(AbstractPlugin):
         """
 
         server_dir = get_server_dir()
-        download_url = get_server_download_url(TEXLAB_VERSION)
+        download_url = get_server_download_url(TEXLAB_VERSION, ARCH, PLATFORM)
         tarball_name = download_url.split("/")[-1]
         tarball_path = os.path.join(server_dir, tarball_name)
 
