@@ -3,7 +3,7 @@ import sublime
 
 from functools import lru_cache
 
-from .const import ARCH, PLATFORM, PLUGIN_NAME, SETTINGS_FILENAME, TEXLAB_VERSION
+from .const import ARCH, PLATFORM, PLUGIN_NAME, SETTINGS_FILENAME, SERVER_VERSION
 from LSP.plugin.core.typing import Optional
 
 
@@ -56,7 +56,7 @@ def get_server_dir() -> str:
     @return The LSP server dir.
     """
 
-    server_dir = "{}-{}-{}".format(PLATFORM, ARCH, TEXLAB_VERSION)
+    server_dir = "{}-{}-{}".format(PLATFORM, ARCH, SERVER_VERSION)
 
     return os.path.join(get_plugin_cache_dir(), server_dir)
 
