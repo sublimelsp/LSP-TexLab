@@ -10,7 +10,6 @@ from .server import (
     get_server_bin_path,
     get_server_dir,
     get_server_download_url,
-    is_plugin_supported,
 )
 from .tarball import decompress
 from LSP.plugin import AbstractPlugin
@@ -50,8 +49,12 @@ class LspTexLabPlugin(AbstractPlugin):
         workspace_folders: List[WorkspaceFolder],
         configuration: ClientConfig,
     ) -> Optional[str]:
-        if not is_plugin_supported():
-            return "Unsupported platform"
+        try:
+            if not (ARCH == "x64" and PLATFORM in ["osx", "linux", "windows"]):
+                raise RuntimeError("Only supports OSX/Linux/Windows x64 system.")
+        except Exception as e:
+            return "{}: {}".format(PLUGIN_NAME, e)
+
         return None
 
     @classmethod

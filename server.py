@@ -75,14 +75,3 @@ def get_server_bin_path() -> str:
         binary = "texlab"
 
     return os.path.join(get_server_dir(), binary)
-
-
-@lru_cache()
-def is_plugin_supported() -> bool:
-    """
-    @brief Determine if plugin can run on this machine.
-
-    @return True if plugin supported, False otherwise.
-    """
-
-    return ARCH == "x64" and PLATFORM in ["osx", "linux", "windows"]
