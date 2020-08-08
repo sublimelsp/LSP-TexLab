@@ -7,7 +7,7 @@ from .const import ARCH, PLATFORM, PLUGIN_NAME, SETTINGS_FILENAME, SERVER_VERSIO
 from LSP.plugin.core.typing import Optional
 
 
-@lru_cache
+@lru_cache()
 def get_plugin_cache_dir() -> str:
     """
     @brief Get this plugin's cache dir.
@@ -18,7 +18,7 @@ def get_plugin_cache_dir() -> str:
     return os.path.join(sublime.cache_path(), PLUGIN_NAME)
 
 
-@lru_cache
+@lru_cache()
 def get_server_download_url(version: str, arch: str, platform: str) -> Optional[str]:
     """
     @brief Get the LSP server download URL.
@@ -48,7 +48,7 @@ def get_server_download_url(version: str, arch: str, platform: str) -> Optional[
     return url.format_map({"version": version, "tarball": tarball})
 
 
-@lru_cache
+@lru_cache()
 def get_server_dir() -> str:
     """
     @brief Get the LSP server dir.
@@ -61,7 +61,7 @@ def get_server_dir() -> str:
     return os.path.join(get_plugin_cache_dir(), server_dir)
 
 
-@lru_cache
+@lru_cache()
 def get_server_bin_path() -> str:
     """
     @brief Get the LSP server binary path.
@@ -77,7 +77,7 @@ def get_server_bin_path() -> str:
     return os.path.join(get_server_dir(), binary)
 
 
-@lru_cache
+@lru_cache()
 def is_plugin_supported() -> bool:
     """
     @brief Determine if plugin can run on this machine.
