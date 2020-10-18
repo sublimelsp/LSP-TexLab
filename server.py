@@ -1,9 +1,9 @@
 import os
 import sublime
 
-from functools import lru_cache
-
 from .const import ARCH, PLATFORM, PLUGIN_NAME, SETTINGS_FILENAME, SERVER_VERSION
+
+from functools import lru_cache
 from LSP.plugin.core.typing import Optional
 
 
@@ -31,7 +31,7 @@ def get_server_download_url(version: str, arch: str, platform: str) -> Optional[
     """
 
     settings = sublime.load_settings(SETTINGS_FILENAME)
-    url = settings.get("lsp_server_download_url", "")  # type: str
+    url = str(settings.get("lsp_server_download_url", ""))
 
     if arch == "x64" and platform == "osx":
         tarball = "texlab-x86_64-macos.tar.gz"
@@ -69,9 +69,7 @@ def get_server_bin_path() -> str:
     @return The LSP server binary path.
     """
 
-    if PLATFORM == "windows":
-        binary = "texlab.exe"
-    else:
-        binary = "texlab"
-
-    return os.path.join(get_server_dir(), binary)
+    return os.path.join(
+        get_server_dir(),
+        "texlab.exe" if PLATFORM == "windows" else "texlab",
+    )

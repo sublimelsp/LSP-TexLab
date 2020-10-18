@@ -18,14 +18,6 @@ from LSP.plugin.core.types import ClientConfig
 from LSP.plugin.core.typing import List, Tuple, Optional
 
 
-def plugin_loaded() -> None:
-    pass
-
-
-def plugin_unloaded() -> None:
-    pass
-
-
 class LspTexLabPlugin(AbstractPlugin):
     @classmethod
     def name(cls) -> str:
