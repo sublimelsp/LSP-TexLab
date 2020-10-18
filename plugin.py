@@ -1,8 +1,8 @@
+import gzip
 import os
-import requests
 import shutil
 import sublime
-
+import urllib.request
 
 from .const import ARCH, PLATFORM, PLUGIN_NAME, SETTINGS_FILENAME, SERVER_VERSION
 from .server import (
@@ -80,12 +80,15 @@ class LspTexLabPlugin(AbstractPlugin):
         tarball_path = os.path.join(server_dir, tarball_name)
 
         # download the platform-specific LSP server tarball
-        os.makedirs(os.path.dirname(tarball_path), exist_ok=True)
-        response = requests.get(download_url, stream=True)
-        with open(tarball_path, "wb") as f:
-            for chunk in response.iter_content(chunk_size=8192):
-                f.write(chunk)
+        response = urllib.request.urlopen(download_url)
 
+        response_data = response.read()
+        if response.info().get("Content-Encoding") == "gzip":
+            response_data = gzip.decompress(response_data)
+
+        os.makedirs(os.path.dirname(tarball_path), exist_ok=True)
+        with open(tarball_path, "wb") as f:
+            f.write(response_data)
         decompress(tarball_path, server_dir)
 
     @classmethod
