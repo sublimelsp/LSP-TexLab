@@ -1,5 +1,7 @@
+import gzip
 import os
 import tarfile
+import urllib.request
 import zipfile
 
 from LSP.plugin.core.typing import Optional
@@ -30,3 +32,24 @@ def decompress(tarball: str, dst_dir: Optional[str] = None) -> None:
         with zipfile.ZipFile(tarball) as f:
             f.extractall(dst_dir)
         return
+
+
+def download(url: str, save_path: str) -> None:
+    """
+    Downloads a file.
+
+    :param url:       The url
+    :type  url:       str
+    :param save_path: The path of the saved file
+    :type  save_path: str
+    """
+
+    response = urllib.request.urlopen(url)
+
+    response_data = response.read()
+    if response.info().get("Content-Encoding") == "gzip":
+        response_data = gzip.decompress(response_data)
+
+    os.makedirs(os.path.dirname(save_path), exist_ok=True)
+    with open(save_path, "wb") as f:
+        f.write(response_data)
