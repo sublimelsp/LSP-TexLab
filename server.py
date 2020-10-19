@@ -8,14 +8,14 @@ from LSP.plugin.core.typing import Optional
 
 
 @lru_cache()
-def get_plugin_cache_dir() -> str:
+def get_plugin_storage_dir() -> str:
     """
-    @brief Get this plugin's cache dir.
+    @brief Get this plugin's storage dir.
 
-    @return The cache dir.
+    @return The storage dir.
     """
 
-    return os.path.join(sublime.cache_path(), PLUGIN_NAME)
+    return os.path.abspath(os.path.join(sublime.cache_path(), "..", "Package Storage", PLUGIN_NAME))
 
 
 @lru_cache()
@@ -56,9 +56,9 @@ def get_server_dir() -> str:
     @return The LSP server dir.
     """
 
-    server_dir = "{}-{}-{}".format(PLATFORM, ARCH, SERVER_VERSION)
+    server_dir = "{}-{}~{}".format(PLATFORM, ARCH, SERVER_VERSION)
 
-    return os.path.join(get_plugin_cache_dir(), server_dir)
+    return os.path.join(get_plugin_storage_dir(), server_dir)
 
 
 @lru_cache()

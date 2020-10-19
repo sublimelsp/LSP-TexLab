@@ -4,7 +4,7 @@ import sublime
 
 from .const import ARCH, PLATFORM, PLUGIN_NAME, SETTINGS_FILENAME, SERVER_VERSION
 from .server import (
-    get_plugin_cache_dir,
+    get_plugin_storage_dir,
     get_server_bin_path,
     get_server_dir,
     get_server_download_url,
@@ -80,4 +80,4 @@ class LspTexLabPlugin(AbstractPlugin):
         @param cls The cls
         """
 
-        shutil.rmtree(get_plugin_cache_dir(), ignore_errors=True)
+        shutil.rmtree(get_plugin_storage_dir(), ignore_errors=True)
