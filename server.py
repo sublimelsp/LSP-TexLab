@@ -1,19 +1,17 @@
-import os
-import sublime
-
-from .const import ARCH, PLATFORM, PLUGIN_NAME, SETTINGS_FILENAME, SERVER_VERSION
-
+from .const import ARCH
+from .const import PLATFORM
+from .const import PLUGIN_NAME
+from .const import SERVER_VERSION
+from .const import SETTINGS_FILENAME
 from functools import lru_cache
 from LSP.plugin.core.typing import Optional
+import os
+import sublime
 
 
 @lru_cache()
 def get_plugin_storage_dir() -> str:
-    """
-    @brief Get this plugin's storage dir.
-
-    @return The storage dir.
-    """
+    """ Gets this plugin's storage dir. """
 
     return os.path.abspath(os.path.join(sublime.cache_path(), "..", "Package Storage", PLUGIN_NAME))
 
@@ -21,13 +19,11 @@ def get_plugin_storage_dir() -> str:
 @lru_cache()
 def get_server_download_url(version: str, arch: str, platform: str) -> Optional[str]:
     """
-    @brief Get the LSP server download URL.
+    Gets the LSP server download URL.
 
-    @param version  The LSP server version
-    @param arch     The arch ("x32" or "x64")
-    @param platform The platform ("osx", "linux" or "windows")
-
-    @return The LSP server download URL.
+    :param      version:   The LSP server version
+    :param      arch:      The arch ("x32" or "x64")
+    :param      platform:  The platform ("osx", "linux" or "windows")
     """
 
     settings = sublime.load_settings(SETTINGS_FILENAME)
@@ -50,11 +46,7 @@ def get_server_download_url(version: str, arch: str, platform: str) -> Optional[
 
 @lru_cache()
 def get_server_dir() -> str:
-    """
-    @brief Get the LSP server dir.
-
-    @return The LSP server dir.
-    """
+    """ Gets the server directory. """
 
     server_dir = "{}-{}~{}".format(PLATFORM, ARCH, SERVER_VERSION)
 
@@ -63,11 +55,7 @@ def get_server_dir() -> str:
 
 @lru_cache()
 def get_server_bin_path() -> str:
-    """
-    @brief Get the LSP server binary path.
-
-    @return The LSP server binary path.
-    """
+    """ Gets the LSP server binary path. """
 
     return os.path.join(
         get_server_dir(),

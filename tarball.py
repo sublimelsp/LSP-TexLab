@@ -1,18 +1,17 @@
+from LSP.plugin.core.typing import Optional
 import gzip
 import os
 import tarfile
 import urllib.request
 import zipfile
 
-from LSP.plugin.core.typing import Optional
-
 
 def decompress(tarball: str, dst_dir: Optional[str] = None) -> None:
     """
-    @brief Decompress the tarball.
+    Decompress the tarball.
 
-    @param tarball The tarball
-    @param dst_dir The destination directory
+    :param      tarball:  The tarball
+    :param      dst_dir:  The destination directory
     """
 
     if not dst_dir:
@@ -39,9 +38,7 @@ def download(url: str, save_path: str) -> None:
     Downloads a file.
 
     :param url:       The url
-    :type  url:       str
     :param save_path: The path of the saved file
-    :type  save_path: str
     """
 
     response = urllib.request.urlopen(url)

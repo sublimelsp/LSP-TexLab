@@ -1,19 +1,20 @@
-import os
-import shutil
-import sublime
-
-from .const import ARCH, PLATFORM, PLUGIN_NAME, SETTINGS_FILENAME, SERVER_VERSION
-from .server import (
-    get_plugin_storage_dir,
-    get_server_bin_path,
-    get_server_dir,
-    get_server_download_url,
-)
+from .const import ARCH
+from .const import PLATFORM
+from .const import PLUGIN_NAME
+from .const import SERVER_VERSION
+from .const import SETTINGS_FILENAME
+from .server import get_plugin_storage_dir
+from .server import get_server_bin_path
+from .server import get_server_dir
+from .server import get_server_download_url
 from .tarball import decompress, download
 from LSP.plugin import AbstractPlugin
 from LSP.plugin.core.protocol import WorkspaceFolder
 from LSP.plugin.core.types import ClientConfig
 from LSP.plugin.core.typing import List, Tuple, Optional
+import os
+import shutil
+import sublime
 
 
 class LspTexLabPlugin(AbstractPlugin):
@@ -53,16 +54,12 @@ class LspTexLabPlugin(AbstractPlugin):
 
     @classmethod
     def install_or_update(cls) -> None:
-        cls.cleanup_cache()
-        cls.prepare_server_bin()
+        cls._cleanup_cache()
+        cls._prepare_server_bin()
 
     @classmethod
-    def prepare_server_bin(cls) -> None:
-        """
-        @brief Download the LSP server binary.
-
-        @param cls The cls
-        """
+    def _prepare_server_bin(cls) -> None:
+        """ Download the LSP server binary. """
 
         server_dir = get_server_dir()
         download_url = get_server_download_url(SERVER_VERSION, ARCH, PLATFORM)
@@ -76,11 +73,7 @@ class LspTexLabPlugin(AbstractPlugin):
         decompress(tarball_path, server_dir)
 
     @classmethod
-    def cleanup_cache(cls) -> None:
-        """
-        @brief Clean up this plugin's cache directory.
-
-        @param cls The cls
-        """
+    def _cleanup_cache(cls) -> None:
+        """ Clean up this plugin's cache directory. """
 
         shutil.rmtree(get_plugin_storage_dir(), ignore_errors=True)
