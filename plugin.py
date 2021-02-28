@@ -13,7 +13,7 @@ from LSP.plugin.core.registry import LspTextCommand
 from LSP.plugin.core.protocol import WorkspaceFolder
 from LSP.plugin.core.types import ClientConfig
 from LSP.plugin.core.typing import List, Tuple, Optional
-from LSP.plugin.core.views import uri_from_view
+from LSP.plugin.core.views import text_document_identifier, text_document_position_params
 import os
 import shutil
 import sublime
@@ -87,16 +87,7 @@ class LspTexlabForwardSearchCommand(LspTextCommand):
         session = self.session_by_name(PLUGIN_NAME)
         if not session:
             return
-        row, col = self.view.rowcol(next(iter(self.view.sel())).a)
-        params = {
-            "textDocument": {
-                "uri": uri_from_view(self.view)
-            },
-            "position": {
-                "line": row,
-                "character": col
-            }
-        }
+        params = text_document_position_params(self.view, next(iter(self.view.sel())).a)
         session.send_request(Request("textDocument/forwardSearch", params), self.on_response_async, self.on_error_async)
 
     def on_response_async(self, response):
@@ -123,11 +114,7 @@ class LspTexlabBuildCommand(LspTextCommand):
         session = self.session_by_name(PLUGIN_NAME)
         if not session:
             return
-        params = {
-            "textDocument": {
-                "uri": uri_from_view(self.view)
-            }
-        }
+        params = {"textDocument": text_document_identifier(self.view)}
         session.send_request(Request("textDocument/build", params), self.on_response_async, self.on_error_async)
 
     def on_response_async(self, response):
