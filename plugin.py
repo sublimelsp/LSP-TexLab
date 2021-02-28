@@ -83,6 +83,8 @@ class LspTexLabPlugin(AbstractPlugin):
 
 class LspTexlabForwardSearchCommand(LspTextCommand):
 
+    session_name = PLUGIN_NAME
+
     def run(self, edit):
         session = self.session_by_name(PLUGIN_NAME)
         if not session:
@@ -109,6 +111,8 @@ class LspTexlabForwardSearchCommand(LspTextCommand):
 
 
 class LspTexlabBuildCommand(LspTextCommand):
+
+    session_name = PLUGIN_NAME
 
     def run(self, edit):
         session = self.session_by_name(PLUGIN_NAME)
