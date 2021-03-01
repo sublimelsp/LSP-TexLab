@@ -7,4 +7,12 @@
             "default": "// Settings in here override those in \"LSP-TexLab/LSP-TexLab.sublime-settings\"\n\n{\n\t$0\n}\n",
         },
     },
+    {
+        "caption": "LSP-TexLab: Forward Search",
+        "command": "lsp_texlab_forward_search",
+    },
+    {
+        "caption": "LSP-TexLab: Build",
+        "command": "lsp_texlab_build",
+    },
 ]

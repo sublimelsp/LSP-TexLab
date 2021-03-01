@@ -8,10 +8,12 @@ from .server import get_server_bin_path
 from .server import get_server_dir
 from .server import get_server_download_url
 from .tarball import decompress, download
-from LSP.plugin import AbstractPlugin
+from LSP.plugin import AbstractPlugin, Request
+from LSP.plugin.core.registry import LspTextCommand
 from LSP.plugin.core.protocol import WorkspaceFolder
 from LSP.plugin.core.types import ClientConfig
 from LSP.plugin.core.typing import List, Tuple, Optional
+from LSP.plugin.core.views import text_document_identifier, text_document_position_params
 import os
 import shutil
 import sublime
@@ -77,3 +79,61 @@ class LspTexLabPlugin(AbstractPlugin):
         """ Clean up this plugin's cache directory. """
 
         shutil.rmtree(get_plugin_storage_dir(), ignore_errors=True)
+
+
+class LspTexlabForwardSearchCommand(LspTextCommand):
+
+    session_name = PLUGIN_NAME
+
+    def run(self, edit):
+        session = self.session_by_name(PLUGIN_NAME)
+        if not session:
+            return
+        params = text_document_position_params(self.view, next(iter(self.view.sel())).a)
+        session.send_request(Request("textDocument/forwardSearch", params), self.on_response_async, self.on_error_async)
+
+    def on_response_async(self, response):
+        status = response["status"]
+        window = self.view.window()
+        if window is None:
+            return
+        if status == 0:
+            pass  # success
+        elif status == 1:
+            window.status_message(PLUGIN_NAME + ": Previewer exited with errors")
+        elif status == 2:
+            window.status_message(PLUGIN_NAME + ": Previewer failed to start or crashed")
+        elif status == 3:
+            window.status_message(PLUGIN_NAME + ": Previewer is not configured")
+
+    def on_error_async(self, error):
+        pass
+
+
+class LspTexlabBuildCommand(LspTextCommand):
+
+    session_name = PLUGIN_NAME
+
+    def run(self, edit):
+        session = self.session_by_name(PLUGIN_NAME)
+        if not session:
+            return
+        params = {"textDocument": text_document_identifier(self.view)}
+        session.send_request(Request("textDocument/build", params), self.on_response_async, self.on_error_async)
+
+    def on_response_async(self, response):
+        status = response["status"]
+        window = self.view.window()
+        if window is None:
+            return
+        if status == 0:
+            pass  # success
+        elif status == 1:
+            window.status_message(PLUGIN_NAME + ": Build error")
+        elif status == 2:
+            window.status_message(PLUGIN_NAME + ": Build failure")
+        elif status == 3:
+            window.status_message(PLUGIN_NAME + ": Build cancelled")
+
+    def on_error_async(self, error):
+        pass

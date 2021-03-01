@@ -18,6 +18,13 @@ There are some ways to configure the package and the language server.
 - From `Preferences > Package Settings > LSP > Servers > LSP-TexLab`
 - From the command palette `Preferences: LSP-TexLab Settings`
 
+## Sublime Commands
+
+|Sublime Command           | Description                                                  |
+|--------------------------|--------------------------------------------------------------|
+|lsp_texlab_forward_search | Performs a forward search from the first cursor position     |
+|lsp_texlab_build          | Build the current file                                       |
+
 ## For Plugin Developer
 
 The targeted version of `texlab` is defined in `const.py`.
