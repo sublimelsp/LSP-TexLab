@@ -5,7 +5,7 @@
 	"languages": [
 		{
 			"languageId": "latex",
-			"document_selector": "text.tex.latex",
+			"document_selector": "text.tex",
 		},
 		{
 			"languageId": "bibtex",
