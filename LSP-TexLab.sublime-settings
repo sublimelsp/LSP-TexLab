@@ -2,16 +2,7 @@
 	//////////////////
 	// LSP settings //
 	//////////////////
-	"languages": [
-		{
-			"languageId": "latex",
-			"document_selector": "text.tex",
-		},
-		{
-			"languageId": "bibtex",
-			"document_selector": "text.bibtex",
-		},
-	],
+	"selector": "text.tex, text.bibtex",
 	"initializationOptions": {},
 	// @see https://texlab.netlify.app/docs/reference/configuration
 	// @see https://github.com/latex-lsp/texlab-vscode/blob/master/package.json
