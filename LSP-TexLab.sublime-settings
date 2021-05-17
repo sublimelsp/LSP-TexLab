@@ -7,32 +7,25 @@
 	// @see https://texlab.netlify.app/docs/reference/configuration
 	// @see https://github.com/latex-lsp/texlab-vscode/blob/master/package.json
 	"settings": {
-		//////////////////////////
-		// LaTex configurations //
-		//////////////////////////
-		"latex.rootDirectory": null,
-		"latex.build.executable": "latexmk",
-		"latex.build.args": [
+		"texlab.rootDirectory": null,
+		"texlab.build.executable": "latexmk",
+		"texlab.build.args": [
 			"-pdf",
 			"-interaction=nonstopmode",
 			"-synctex=1",
 			"%f",
 		],
-		"latex.build.onSave": false,
-		"latex.build.outputDirectory": ".",
-		"latex.build.forwardSearchAfter": false,
-		"latex.forwardSearch.executable": null,
-		"latex.forwardSearch.args": [],
-		"latex.lint.onSave": true,
-		"latex.lint.onChange": false,
-		"latex.server.autoDownload": false,
-		"latex.server.trace": false,
-		"latex.server.logFile": null,
-		///////////////////////////
-		// BibTeX configurations //
-		///////////////////////////
-		"bibtex.formatting.formatter": "texlab",
-		"bibtex.formatting.lineLength": 120,
+		"texlab.build.isContinuous": false,
+		"texlab.auxDirectory": ".",
+		"texlab.build.onSave": false,
+		"texlab.forwardSearch.executable": null,
+		"texlab.forwardSearch.args": [],
+		"texlab.build.outputDirectory": ".",
+		"texlab.chktex.onOpenAndSave": true,
+		"texlab.chktex.onEdit": true,
+		"texlab.diagnosticsDelay": 300,
+		"texlab.formatterLineLength": 80,
+		"texlab.bibtexFormatter": "texlab",
 	},
 	//////////////////////
 	// non-LSP settings //
