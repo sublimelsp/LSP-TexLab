@@ -7,25 +7,49 @@
 	// @see https://texlab.netlify.app/docs/reference/configuration
 	// @see https://github.com/latex-lsp/texlab-vscode/blob/master/package.json
 	"settings": {
+		// Defines the directory from which the source files get compiled.
+		// You may need to set this property for multi-folder projects where TexLab fails to detect the root document.
 		"texlab.rootDirectory": null,
+		// Defines the executable of the LaTeX build tool.
 		"texlab.build.executable": "latexmk",
+		// Defines additional arguments that are passed to the configured LaTeX build tool.
+		// Add "-pvc" and set texlab.build.isContinuous to true to enable continuous build-and-preview.
 		"texlab.build.args": [
 			"-pdf",
 			"-interaction=nonstopmode",
 			"-synctex=1",
 			"%f",
 		],
+		// Set this property to true if the build arguments imply a continous build
 		"texlab.build.isContinuous": false,
+		// Defines the directory containing the build artifacts.
+		// Note that you need to set the output directory in texlab.build.args too,
+		// if you want to change the build directory.
 		"texlab.auxDirectory": ".",
-		"texlab.build.onSave": false,
+		// Defines the executable of the PDF previewer.
 		"texlab.forwardSearch.executable": null,
+		// Defines additional arguments that are 
+		// passed to the configured previewer to perform the forward search.
+		// %f: The path of the current TeX file.
+		// %p: The path of the current PDF file. 
+		// %l: The current line number.
 		"texlab.forwardSearch.args": [],
-		"texlab.build.outputDirectory": ".",
-		"texlab.chktex.onOpenAndSave": true,
-		"texlab.chktex.onEdit": true,
+		// Lint using chktex after opening and saving a file.
+		"texlab.chktex.onOpenAndSave": false,
+		// Lint using chktex after editing a file
+		"texlab.chktex.onEdit": false,
+		// Delay in milliseconds before reporting diagnostics.
 		"texlab.diagnosticsDelay": 300,
-		"texlab.formatterLineLength": 80,
+		// Defines the formatter to use for BibTeX formatting.
+		// Possible values are either texlab or latexindent.
 		"texlab.bibtexFormatter": "texlab",
+		// Defines the maximum amount of characters per line (0 = disable) when formatting BibTeX files.
+		"texlab.formatterLineLength": 80,
+		// DEPRECATED
+		// See https://github.com/latex-lsp/texlab/blob/v3.0.0/CHANGELOG.md
+		"texlab.build.onSave": false,
+		// See https://github.com/latex-lsp/texlab/blob/v3.0.0/CHANGELOG.md
+		"texlab.build.forwardSearchAfter": false,
 	},
 	//////////////////////
 	// non-LSP settings //
