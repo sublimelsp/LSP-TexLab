@@ -1,0 +1,4 @@
+{
+    "target": "lsp_texlab_build_system",
+    "selector": "text.tex"
+}
