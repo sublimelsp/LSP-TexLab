@@ -2,10 +2,9 @@
 	//////////////////
 	// LSP settings //
 	//////////////////
-	"selector": "text.tex, text.bibtex",
+	"selector": "text.tex | text.bibtex",
 	"initializationOptions": {},
-	// @see https://texlab.netlify.app/docs/reference/configuration
-	// @see https://github.com/latex-lsp/texlab-vscode/blob/master/package.json
+	// @see https://github.com/latex-lsp/texlab/blob/master/docs/options.md
 	"settings": {
 		// Defines the directory from which the source files get compiled.
 		// You may need to set this property for multi-folder projects where TexLab fails to detect the root document.
