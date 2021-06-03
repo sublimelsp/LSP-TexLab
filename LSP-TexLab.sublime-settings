@@ -39,6 +39,8 @@
 		"texlab.chktex.onEdit": false,
 		// Delay in milliseconds before reporting diagnostics.
 		"texlab.diagnosticsDelay": 300,
+		// Defines the maximum amount of characters per line (0 = disable) when formatting BibTeX files.
+		"texlab.formatterLineLength": 80,
 		// Defines the formatter to use for BibTeX formatting.
 		// Possible values are either texlab or latexindent.
 		"texlab.bibtexFormatter": "texlab",
@@ -52,9 +54,9 @@
 		// Modifies linebreaks before, during, and at the end of code blocks when formatting with latexindent.
 		// This corresponds to the --modifylinebreaks flag of latexindent.
 		"texlab.latexindent.modifyLineBreaks": false,
-		// Defines the maximum amount of characters per line (0 = disable) when formatting BibTeX files.
-		"texlab.formatterLineLength": 80,
-		// DEPRECATED
+		////////////////
+		// DEPRECATED //
+		////////////////
 		// See https://github.com/latex-lsp/texlab/blob/v3.0.0/CHANGELOG.md
 		"texlab.build.onSave": false,
 		// See https://github.com/latex-lsp/texlab/blob/v3.0.0/CHANGELOG.md
