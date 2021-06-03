@@ -43,6 +43,16 @@
 		// Defines the formatter to use for BibTeX formatting.
 		// Possible values are either texlab or latexindent.
 		"texlab.bibtexFormatter": "texlab",
+		// Defines the formatter to use for LaTeX formatting.
+		// Possible values are either texlab or latexindent. Note that texlab is not implemented yet.
+		"texlab.latexFormatter": "latexindent",
+		// Defines the path of a file containing the latexindent configuration.
+		// This corresponds to the --local=file.yaml flag of latexindent.
+		// By default the configuration inside the project root directory is used.
+		"texlab.latexindent.local": null,
+		// Modifies linebreaks before, during, and at the end of code blocks when formatting with latexindent.
+		// This corresponds to the --modifylinebreaks flag of latexindent.
+		"texlab.latexindent.modifyLineBreaks": false,
 		// Defines the maximum amount of characters per line (0 = disable) when formatting BibTeX files.
 		"texlab.formatterLineLength": 80,
 		// DEPRECATED
