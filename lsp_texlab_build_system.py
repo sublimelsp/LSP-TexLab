@@ -2,10 +2,10 @@ import sublime_plugin
 
 
 class LspTexlabBuildSystemCommand(sublime_plugin.WindowCommand):
-    def is_enabled(self, lint=False, integration=False, kill=False) -> bool:
+    def is_enabled(self, lint: bool = False, integration: bool = False, kill: bool = False) -> bool:
         return True
 
-    def run(self, lint=False, integration=False, kill=False):
+    def run(self, lint: bool = False, integration: bool = False, kill: bool = False):
         if kill:
             print("TexLab: Killing builds is not supported")
             return

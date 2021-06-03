@@ -12,7 +12,7 @@ from LSP.plugin import AbstractPlugin, Request
 from LSP.plugin.core.registry import LspTextCommand
 from LSP.plugin.core.protocol import WorkspaceFolder
 from LSP.plugin.core.types import ClientConfig
-from LSP.plugin.core.typing import List, Tuple, Optional
+from LSP.plugin.core.typing import Any, List, Tuple, Optional
 from LSP.plugin.core.views import text_document_identifier, text_document_position_params
 import os
 import shutil
@@ -61,7 +61,7 @@ class LspTexLabPlugin(AbstractPlugin):
 
     @classmethod
     def _prepare_server_bin(cls) -> None:
-        """ Download the LSP server binary. """
+        """Download the LSP server binary."""
 
         server_dir = get_server_dir()
         download_url = get_server_download_url(SERVER_VERSION, ARCH, PLATFORM)
@@ -76,7 +76,7 @@ class LspTexLabPlugin(AbstractPlugin):
 
     @classmethod
     def _cleanup_cache(cls) -> None:
-        """ Clean up this plugin's cache directory. """
+        """Clean up this plugin's cache directory."""
 
         shutil.rmtree(get_plugin_storage_dir(), ignore_errors=True)
 
@@ -85,14 +85,14 @@ class LspTexlabForwardSearchCommand(LspTextCommand):
 
     session_name = PLUGIN_NAME
 
-    def run(self, edit):
+    def run(self, edit: sublime.Edit) -> None:
         session = self.session_by_name(PLUGIN_NAME)
         if not session:
             return
         params = text_document_position_params(self.view, next(iter(self.view.sel())).a)
         session.send_request(Request("textDocument/forwardSearch", params), self.on_response_async, self.on_error_async)
 
-    def on_response_async(self, response):
+    def on_response_async(self, response: Any) -> None:
         status = response["status"]
         window = self.view.window()
         if window is None:
@@ -106,7 +106,7 @@ class LspTexlabForwardSearchCommand(LspTextCommand):
         elif status == 3:
             window.status_message(PLUGIN_NAME + ": Previewer is not configured")
 
-    def on_error_async(self, error):
+    def on_error_async(self, error: Any) -> None:
         pass
 
 
@@ -114,14 +114,14 @@ class LspTexlabBuildCommand(LspTextCommand):
 
     session_name = PLUGIN_NAME
 
-    def run(self, edit):
+    def run(self, edit: sublime.Edit) -> None:
         session = self.session_by_name(PLUGIN_NAME)
         if not session:
             return
         params = {"textDocument": text_document_identifier(self.view)}
         session.send_request(Request("textDocument/build", params), self.on_response_async, self.on_error_async)
 
-    def on_response_async(self, response):
+    def on_response_async(self, response: Any) -> None:
         status = response["status"]
         window = self.view.window()
         if window is None:
@@ -135,5 +135,5 @@ class LspTexlabBuildCommand(LspTextCommand):
         elif status == 3:
             window.status_message(PLUGIN_NAME + ": Build cancelled")
 
-    def on_error_async(self, error):
+    def on_error_async(self, error: Any) -> None:
         pass
