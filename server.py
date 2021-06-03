@@ -11,7 +11,7 @@ import sublime
 
 @lru_cache()
 def get_plugin_storage_dir() -> str:
-    """ Gets this plugin's storage dir. """
+    """Gets this plugin's storage dir."""
 
     return os.path.abspath(os.path.join(sublime.cache_path(), "..", "Package Storage", PLUGIN_NAME))
 
@@ -46,7 +46,7 @@ def get_server_download_url(version: str, arch: str, platform: str) -> Optional[
 
 @lru_cache()
 def get_server_dir() -> str:
-    """ Gets the server directory. """
+    """Gets the server directory."""
 
     server_dir = "{}-{}~{}".format(PLATFORM, ARCH, SERVER_VERSION)
 
@@ -55,7 +55,7 @@ def get_server_dir() -> str:
 
 @lru_cache()
 def get_server_bin_path() -> str:
-    """ Gets the LSP server binary path. """
+    """Gets the LSP server binary path."""
 
     return os.path.join(
         get_server_dir(),
