@@ -22,7 +22,7 @@ def get_server_download_url(version: str, arch: str, platform: str) -> Optional[
     Gets the LSP server download URL.
 
     :param      version:   The LSP server version
-    :param      arch:      The arch ("x32" or "x64")
+    :param      arch:      The arch ("x32", "x64" or "arm64")
     :param      platform:  The platform ("osx", "linux" or "windows")
     """
 
