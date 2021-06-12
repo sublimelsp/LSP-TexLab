@@ -19,8 +19,10 @@
 			"-synctex=1",
 			"%f",
 		],
-		// Set this property to true if the build arguments imply a continous build
-		"texlab.build.isContinuous": false,
+		// Set this property to true if you want to execute a forward search after a build.
+		"texlab.build.forwardSearchAfter": false,
+		// Set this property to true if you want to compile the project after saving a file.
+		"texlab.build.onSave": false,
 		// Defines the directory containing the build artifacts.
 		// Note that you need to set the output directory in texlab.build.args too,
 		// if you want to change the build directory.
@@ -57,10 +59,9 @@
 		////////////////
 		// DEPRECATED //
 		////////////////
-		// See https://github.com/latex-lsp/texlab/blob/v3.0.0/CHANGELOG.md
-		"texlab.build.onSave": false,
-		// See https://github.com/latex-lsp/texlab/blob/v3.0.0/CHANGELOG.md
-		"texlab.build.forwardSearchAfter": false,
+		// [Deprecated] See https://github.com/latex-lsp/texlab/blob/v3.2.0/CHANGELOG.md
+		// Set this property to true if the build arguments imply a continous build
+		"texlab.build.isContinuous": false,
 	},
 	//////////////////////
 	// non-LSP settings //
