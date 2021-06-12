@@ -9,11 +9,12 @@ from .server import get_server_dir
 from .server import get_server_download_url
 from .tarball import decompress, download
 from LSP.plugin import AbstractPlugin, Request
-from LSP.plugin.core.registry import LspTextCommand
 from LSP.plugin.core.protocol import WorkspaceFolder
+from LSP.plugin.core.registry import LspTextCommand
 from LSP.plugin.core.types import ClientConfig
 from LSP.plugin.core.typing import Any, List, Tuple, Optional
-from LSP.plugin.core.views import text_document_identifier, text_document_position_params
+from LSP.plugin.core.views import text_document_identifier
+from LSP.plugin.core.views import text_document_position_params
 import os
 import shutil
 import sublime
