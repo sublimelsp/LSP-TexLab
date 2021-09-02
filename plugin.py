@@ -66,11 +66,12 @@ class LspTexLabPlugin(AbstractPlugin):
 
         server_dir = get_server_dir()
         download_url = get_server_download_url(SERVER_VERSION, ARCH, PLATFORM)
-        tarball_name = download_url.split("/")[-1]
-        tarball_path = os.path.join(server_dir, tarball_name)
 
         if not download_url:
             raise RuntimeError("Unsupported platform...")
+
+        tarball_name = download_url.split("/")[-1]
+        tarball_path = os.path.join(server_dir, tarball_name)
 
         download(download_url, tarball_path)
         decompress(tarball_path, server_dir)
