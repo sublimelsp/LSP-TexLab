@@ -60,13 +60,3 @@ def get_default_server_bin_path() -> str:
         get_server_dir(),
         "texlab.exe" if PLATFORM == "windows" else "texlab",
     )
-
-
-def get_server_bin_path() -> str:
-    """Gets the LSP server binary path."""
-
-    settings = sublime.load_settings(SETTINGS_FILENAME)
-    command = settings.get("command")
-    if command:
-        return command[0]
-    return get_default_server_bin_path()

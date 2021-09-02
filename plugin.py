@@ -3,21 +3,17 @@ from .const import PLATFORM
 from .const import PLATFORM_ARCH
 from .const import PLUGIN_NAME
 from .const import SERVER_VERSION
-from .const import SETTINGS_FILENAME
-from .const import SUPPORTED_PLATFORM_ARCH
 from .server import get_default_server_bin_path
 from .server import get_plugin_storage_dir
-from .server import get_server_bin_path
 from .server import get_server_dir
 from .server import get_server_download_url
 from .tarball import decompress
 from .tarball import download
 from LSP.plugin import AbstractPlugin
 from LSP.plugin import Request
-from LSP.plugin.core.protocol import WorkspaceFolder
 from LSP.plugin.core.registry import LspTextCommand
-from LSP.plugin.core.types import ClientConfig
-from LSP.plugin.core.typing import Any, List, Tuple, Optional
+from LSP.plugin.core.typing import Any, Dict, Tuple
+from LSP.plugin.core.views import extract_variables
 from LSP.plugin.core.views import text_document_identifier
 from LSP.plugin.core.views import text_document_position_params
 import os
@@ -32,61 +28,53 @@ class LspTexLabPlugin(AbstractPlugin):
 
     @classmethod
     def configuration(cls) -> Tuple[sublime.Settings, str]:
-        settings_path = "Packages/{}/{}".format(PLUGIN_NAME, SETTINGS_FILENAME)
-        settings = sublime.load_settings(SETTINGS_FILENAME)
-
-        if not settings.get("command"):
-            # Apple M1 (osx_arm64) has to manually install texlab via Homebrew
-            # @see https://formulae.brew.sh/formula/texlab
-            if PLATFORM_ARCH == "osx_arm64":
-                bin_path = "texlab"
-            # Other supported platforms use the downloaed binary by default
-            else:
-                bin_path = get_default_server_bin_path()
-            settings.set("command", [bin_path])
-
-        return settings, settings_path
+        name = cls.name()
+        basename = "{}.sublime-settings".format(name)
+        filepath = "Packages/{}/{}".format(name, basename)
+        return sublime.load_settings(basename), filepath
 
     @classmethod
-    def can_start(
-        cls,
-        window: sublime.Window,
-        initiating_view: sublime.View,
-        workspace_folders: List[WorkspaceFolder],
-        configuration: ClientConfig,
-    ) -> Optional[str]:
-        try:
-            if PLATFORM_ARCH not in SUPPORTED_PLATFORM_ARCH:
-                raise RuntimeError("Only supports platform/arch: {}".format(SUPPORTED_PLATFORM_ARCH))
-        except Exception as e:
-            return "{}: {}".format(PLUGIN_NAME, e)
-
-        return None
+    def additional_variables(cls) -> Dict[str, str]:
+        return {
+            "texlab_bin": "texlab" if PLATFORM_ARCH == "osx_arm64" else get_default_server_bin_path(),
+        }
 
     @classmethod
     def needs_update_or_installation(cls) -> bool:
-        return not os.path.isfile(get_server_bin_path())
+        variables = extract_variables(sublime.active_window())
+        variables.update(cls.additional_variables())
+        server_bin = cls.configuration()[0].get("command")[0]
+        server_bin = sublime.expand_variables(server_bin, variables)
+        return not shutil.which(server_bin)
 
     @classmethod
     def install_or_update(cls) -> None:
         cls._cleanup_cache()
-        cls._prepare_server_bin()
+
+        is_download_ok = cls._prepare_server_bin()
+        if not is_download_ok:
+            raise RuntimeError(
+                "Unable to download the server binary."
+                + " If you are using Apple M1, you have to build 'texlab' via Homebrew Formulae"
+                + " (see https://formulae.brew.sh/formula/texlab) by yourself."
+            )
 
     @classmethod
-    def _prepare_server_bin(cls) -> None:
+    def _prepare_server_bin(cls) -> bool:
         """Download the LSP server binary."""
 
         server_dir = get_server_dir()
         download_url = get_server_download_url(SERVER_VERSION, ARCH, PLATFORM)
-
         if not download_url:
-            raise RuntimeError("Cannot download the server binary... Maybe your platform/arch is unsupported.")
+            return False
 
         tarball_name = download_url.split("/")[-1]
         tarball_path = os.path.join(server_dir, tarball_name)
 
         download(download_url, tarball_path)
         decompress(tarball_path, server_dir)
+
+        return True
 
     @classmethod
     def _cleanup_cache(cls) -> None:

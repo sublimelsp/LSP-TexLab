@@ -2,6 +2,7 @@
 	//////////////////
 	// LSP settings //
 	//////////////////
+	"command": ["${texlab_bin}"],
 	"selector": "text.tex | text.bibtex",
 	"auto_complete_selector": "text.tex - comment",
 	"initializationOptions": {},
