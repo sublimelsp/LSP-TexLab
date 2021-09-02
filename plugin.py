@@ -7,8 +7,10 @@ from .server import get_plugin_storage_dir
 from .server import get_server_bin_path
 from .server import get_server_dir
 from .server import get_server_download_url
-from .tarball import decompress, download
-from LSP.plugin import AbstractPlugin, Request
+from .tarball import decompress
+from .tarball import download
+from LSP.plugin import AbstractPlugin
+from LSP.plugin import Request
 from LSP.plugin.core.protocol import WorkspaceFolder
 from LSP.plugin.core.registry import LspTextCommand
 from LSP.plugin.core.types import ClientConfig
