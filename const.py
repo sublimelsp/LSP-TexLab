@@ -9,5 +9,13 @@ SETTINGS_FILENAME = "{}.sublime-settings".format(PLUGIN_NAME)
 
 ARCH = sublime.arch()
 PLATFORM = sublime.platform()
+PLATFORM_ARCH = "{}_{}".format(PLATFORM, ARCH)
 ST_CHANNEL = sublime.channel()
 ST_VERSION = sublime.version()
+
+SUPPORTED_PLATFORM_ARCH = (
+    "linux_x64",
+    "osx_arm64",
+    "osx_x64",
+    "windows_x64",
+)

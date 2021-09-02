@@ -1,8 +1,11 @@
 from .const import ARCH
 from .const import PLATFORM
+from .const import PLATFORM_ARCH
 from .const import PLUGIN_NAME
 from .const import SERVER_VERSION
 from .const import SETTINGS_FILENAME
+from .const import SUPPORTED_PLATFORM_ARCH
+from .server import get_default_server_bin_path
 from .server import get_plugin_storage_dir
 from .server import get_server_bin_path
 from .server import get_server_dir
@@ -33,7 +36,14 @@ class LspTexLabPlugin(AbstractPlugin):
         settings = sublime.load_settings(SETTINGS_FILENAME)
 
         if not settings.get("command"):
-            settings.set("command", [get_server_bin_path()])
+            # Apple M1 (osx_arm64) has to manually install texlab via Homebrew
+            # @see https://formulae.brew.sh/formula/texlab
+            if PLATFORM_ARCH == "osx_arm64":
+                bin_path = "texlab"
+            # Other supported platforms use the downloaed binary by default
+            else:
+                bin_path = get_default_server_bin_path()
+            settings.set("command", [bin_path])
 
         return settings, settings_path
 
@@ -46,8 +56,8 @@ class LspTexLabPlugin(AbstractPlugin):
         configuration: ClientConfig,
     ) -> Optional[str]:
         try:
-            if not (ARCH == "x64" and PLATFORM in ["osx", "linux", "windows"]):
-                raise RuntimeError("Only supports OSX/Linux/Windows x64 system.")
+            if PLATFORM_ARCH not in SUPPORTED_PLATFORM_ARCH:
+                raise RuntimeError("Only supports platform/arch: {}".format(SUPPORTED_PLATFORM_ARCH))
         except Exception as e:
             return "{}: {}".format(PLUGIN_NAME, e)
 
@@ -70,7 +80,7 @@ class LspTexLabPlugin(AbstractPlugin):
         download_url = get_server_download_url(SERVER_VERSION, ARCH, PLATFORM)
 
         if not download_url:
-            raise RuntimeError("Unsupported platform...")
+            raise RuntimeError("Cannot download the server binary... Maybe your platform/arch is unsupported.")
 
         tarball_name = download_url.split("/")[-1]
         tarball_path = os.path.join(server_dir, tarball_name)
