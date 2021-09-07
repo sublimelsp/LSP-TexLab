@@ -12,7 +12,7 @@ from .tarball import download
 from LSP.plugin import AbstractPlugin
 from LSP.plugin import Request
 from LSP.plugin.core.registry import LspTextCommand
-from LSP.plugin.core.typing import Any, Dict, Tuple
+from LSP.plugin.core.typing import Any, Dict, List, Tuple
 from LSP.plugin.core.views import extract_variables
 from LSP.plugin.core.views import text_document_identifier
 from LSP.plugin.core.views import text_document_position_params
@@ -41,9 +41,19 @@ class LspTexLabPlugin(AbstractPlugin):
 
     @classmethod
     def needs_update_or_installation(cls) -> bool:
+        command: List[str] = cls.configuration()[0].get("command")
+        server_bin = command[0]
+
+        if (
+            # auto install/update unsupported
+            PLATFORM_ARCH == "osx_arm64"
+            # the user want to manager it by himself
+            or server_bin not in ("${texlab_bin}", "$texlab_bin")
+        ):
+            return False
+
         variables = extract_variables(sublime.active_window())
         variables.update(cls.additional_variables())
-        server_bin = cls.configuration()[0].get("command")[0]
         server_bin = sublime.expand_variables(server_bin, variables)
         return not shutil.which(server_bin)
 
