@@ -41,7 +41,7 @@ class LspTexLabPlugin(AbstractPlugin):
 
     @classmethod
     def needs_update_or_installation(cls) -> bool:
-        command: List[str] = cls.configuration()[0].get("command")
+        command = cls.configuration()[0].get("command")  # type: List[str]
         server_bin = command[0]
 
         if (
