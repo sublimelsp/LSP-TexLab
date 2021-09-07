@@ -3,6 +3,7 @@
 	// LSP settings //
 	//////////////////
 	"selector": "text.tex | text.bibtex",
+	"auto_complete_selector": "text.tex - comment",
 	"initializationOptions": {},
 	// @see https://github.com/latex-lsp/texlab/blob/master/docs/options.md
 	"settings": {
