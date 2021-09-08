@@ -20,10 +20,10 @@ There are some ways to configure the package and the language server.
 
 ## Sublime Commands
 
-|Sublime Command           | Description                                                  |
-|--------------------------|--------------------------------------------------------------|
-|lsp_texlab_forward_search | Performs a forward search from the first cursor position     |
-|lsp_texlab_build          | Build the current file                                       |
+| Sublime Command           | Description                                              |
+| ------------------------- | -------------------------------------------------------- |
+| lsp_texlab_forward_search | Performs a forward search from the first cursor position |
+| lsp_texlab_build          | Build the current file                                   |
 
 ## For Plugin Developer
 
