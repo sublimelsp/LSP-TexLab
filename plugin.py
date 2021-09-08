@@ -1,4 +1,5 @@
 from .const import ARCH
+from .const import MANAGED_PLATFORM_ARCHS
 from .const import PLATFORM
 from .const import PLATFORM_ARCH
 from .const import PLUGIN_NAME
@@ -44,18 +45,16 @@ class LspTexLabPlugin(AbstractPlugin):
         command = cls.configuration()[0].get("command")  # type: List[str]
         server_bin = command[0]
 
-        if (
-            # auto install/update unsupported
-            PLATFORM_ARCH == "osx_arm64"
-            # the user want to manager it by himself
-            or server_bin not in ("${texlab_bin}", "$texlab_bin")
-        ):
-            return False
+        # only auto manage platforms which the official server supports
+        if PLATFORM_ARCH in MANAGED_PLATFORM_ARCHS and server_bin in ("${texlab_bin}", "$texlab_bin"):
+            variables = extract_variables(sublime.active_window())
+            variables.update(cls.additional_variables())
+            server_bin = sublime.expand_variables(server_bin, variables)
+            return not os.path.isfile(server_bin)
 
-        variables = extract_variables(sublime.active_window())
-        variables.update(cls.additional_variables())
-        server_bin = sublime.expand_variables(server_bin, variables)
-        return not shutil.which(server_bin)
+        # for unofficial supported platforms, users have to compile texlab by themselves
+        # and adjust the "command" to use the executable
+        return False
 
     @classmethod
     def install_or_update(cls) -> None:
@@ -63,11 +62,7 @@ class LspTexLabPlugin(AbstractPlugin):
 
         is_download_ok = cls._prepare_server_bin()
         if not is_download_ok:
-            raise RuntimeError(
-                "Unable to download the server binary."
-                + " If you are using Apple M1, you have to build 'texlab' via Homebrew Formulae"
-                + " (see https://formulae.brew.sh/formula/texlab) by yourself."
-            )
+            raise RuntimeError("Unable to download the server binary...")
 
     @classmethod
     def _prepare_server_bin(cls) -> bool:
