@@ -17,31 +17,35 @@ def get_plugin_storage_dir() -> str:
 
 
 @lru_cache()
-def get_server_download_url(version: str, arch: str, platform: str) -> Optional[str]:
+def get_server_download_url(version: str, platform: str, arch: str) -> Optional[str]:
     """
     Gets the LSP server download URL.
 
     :param      version:   The LSP server version
-    :param      arch:      The arch ("x32", "x64" or "arm64")
     :param      platform:  The platform ("osx", "linux" or "windows")
+    :param      arch:      The arch ("x32", "x64" or "arm64")
     """
 
+    tarball_names = {
+        "linux_x64": "texlab-x86_64-linux.tar.gz",
+        "osx_x64": "texlab-x86_64-macos.tar.gz",
+        "windows_x64": "texlab-x86_64-windows.zip",
+    }
+
     settings = sublime.load_settings(SETTINGS_FILENAME)
-    url = str(settings.get("lsp_server_download_url", ""))
+    url = settings.get("lsp_server_download_url", "")  # type: str
+    tarball = tarball_names.get("{}_{}".format(platform, arch), "")
 
-    if arch == "x64" and platform == "osx":
-        tarball = "texlab-x86_64-macos.tar.gz"
-    elif arch == "x64" and platform == "linux":
-        tarball = "texlab-x86_64-linux.tar.gz"
-    elif arch == "x64" and platform == "windows":
-        tarball = "texlab-x86_64-windows.zip"
-    else:
-        tarball = ""
-
-    if not url or not tarball:
+    if not (url and tarball):
         return None
 
-    return url.format_map({"version": version, "tarball": tarball})
+    return url.format_map(
+        {
+            "version": version,
+            "version_without_v": version.lstrip("v"),
+            "tarball": tarball,
+        }
+    )
 
 
 @lru_cache()

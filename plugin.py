@@ -37,7 +37,7 @@ class LspTexLabPlugin(AbstractPlugin):
     @classmethod
     def additional_variables(cls) -> Dict[str, str]:
         return {
-            "texlab_bin": "texlab" if PLATFORM_ARCH == "osx_arm64" else get_default_server_bin_path(),
+            "texlab_bin": get_default_server_bin_path() if PLATFORM_ARCH in MANAGED_PLATFORM_ARCHS else "texlab",
         }
 
     @classmethod
@@ -69,7 +69,7 @@ class LspTexLabPlugin(AbstractPlugin):
         """Download the LSP server binary."""
 
         server_dir = get_server_dir()
-        download_url = get_server_download_url(SERVER_VERSION, ARCH, PLATFORM)
+        download_url = get_server_download_url(SERVER_VERSION, PLATFORM, ARCH)
         if not download_url:
             return False
 

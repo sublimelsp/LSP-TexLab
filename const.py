@@ -6,7 +6,9 @@ SERVER_VERSION = "v3.2.0"
 
 PLUGIN_NAME = "LSP-TexLab"
 SETTINGS_FILENAME = "{}.sublime-settings".format(PLUGIN_NAME)
-MANAGED_PLATFORM_ARCHS = ("windows_x64", "linux_x64", "osx_x64")
+
+# these platforms have an official pre-built texlab binary on GitHub
+MANAGED_PLATFORM_ARCHS = ("linux_x64", "osx_x64", "windows_x64")
 
 ARCH = sublime.arch()
 PLATFORM = sublime.platform()
