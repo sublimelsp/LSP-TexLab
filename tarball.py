@@ -33,7 +33,7 @@ def decompress(tarball: str, dst_dir: Optional[str] = None) -> None:
         return
 
 
-def download(url: str, save_path: str) -> None:
+def download(url: str, save_path: str, chunk_size: int = 512 * 1024) -> None:
     """
     Downloads a file.
 
@@ -42,11 +42,16 @@ def download(url: str, save_path: str) -> None:
     """
 
     response = urllib.request.urlopen(url)
+    data = b""
+    while True:
+        chunk = response.read(chunk_size)
+        if not chunk:
+            break
+        data += chunk
 
-    response_data = response.read()
     if response.info().get("Content-Encoding") == "gzip":
-        response_data = gzip.decompress(response_data)
+        data = gzip.decompress(data)
 
     os.makedirs(os.path.dirname(save_path), exist_ok=True)
     with open(save_path, "wb") as f:
-        f.write(response_data)
+        f.write(data)
