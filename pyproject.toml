@@ -1,6 +1,6 @@
 [tool.black]
 line-length = 120
-target-version = ['py38']
+target-version = ['py33']
 
 # regex
 exclude = '''
@@ -11,3 +11,19 @@ exclude = '''
   stubs
 )/
 '''
+
+[tool.pyright]
+include = ["./"]
+exclude = [
+  "**/__pycache__/",
+  "**/node_modules/",
+  # git-related
+  "**/.git/",
+  "**/br-*/",
+  "**/branch-*/",
+]
+ignore = []
+stubPath = "typings"
+pythonVersion = "3.8"
+venvPath = "."
+venv = ".venv"
