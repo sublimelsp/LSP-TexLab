@@ -28,6 +28,7 @@ def get_server_download_url(version: str, platform: str, arch: str) -> Optional[
 
     tarball_names = {
         "linux_x64": "texlab-x86_64-linux.tar.gz",
+        "osx_arm64": "texlab-aarch64-macos.tar.gz",
         "osx_x64": "texlab-x86_64-macos.tar.gz",
         "windows_x64": "texlab-x86_64-windows.zip",
     }
