@@ -46,7 +46,7 @@ class LspTexLabPlugin(AbstractPlugin):
         server_bin = command[0]
 
         # only auto manage platforms which the official server supports
-        if PLATFORM_ARCH in MANAGED_PLATFORM_ARCHS and server_bin in ("${texlab_bin}", "$texlab_bin"):
+        if PLATFORM_ARCH in MANAGED_PLATFORM_ARCHS and server_bin in {"${texlab_bin}", "$texlab_bin"}:
             variables = extract_variables(sublime.active_window())
             variables.update(cls.additional_variables())
             server_bin = sublime.expand_variables(server_bin, variables)
