@@ -11,26 +11,6 @@ Note that this plugin requires ST >= 4070 and only supports x64 system.
 1. (Optional) Install [ChkTex](https://ctan.org/tex-archive/support/chktex) for linting.
 1. Restart Sublime.
 
-### For Apple M1 Users
-
-[There](https://github.com/latex-lsp/texlab/releases) is no official pre-built server binary for Apple M1 (arm64-osx).
-So if you want to use this plugin, you would have to build texlab by yourself.
-
-```sh
-# build texlab with rust toolchain
-cargo install --git https://github.com/latex-lsp/texlab.git --locked
-```
-
-And then modify the `"command"` in LSP-TexLab settings:
-
-```js
-{
-    // if the built binary is in PATH, you can simply use "texlab",
-    // otherwise, you would have to specify a absolute path to the texlab binary.
-    "command": ["texlab"],
-}
-```
-
 ## Configuration
 
 There are some ways to configure the package and the language server.
