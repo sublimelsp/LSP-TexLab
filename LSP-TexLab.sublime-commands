@@ -15,4 +15,12 @@
         "caption": "LSP-TexLab: Build",
         "command": "lsp_texlab_build",
     },
+    {
+        "caption": "LSP-TexLab: Clean Auxiliary",
+        "command": "lsp_texlab_clean_auxiliary",
+    },
+    {
+        "caption": "LSP-TexLab: Clean Artifacts",
+        "command": "lsp_texlab_clean_artifacts",
+    },
 ]
