@@ -145,35 +145,3 @@ class LspTexlabBuildCommand(LspTextCommand):
 
     def on_error_async(self, error: Any) -> None:
         pass
-
-
-class LspTexlabCleanAuxiliaryCommand(LspTextCommand):
-
-    session_name = PLUGIN_NAME
-
-    def run(self, _: sublime.Edit) -> None:
-        session = self.session_by_name(PLUGIN_NAME)
-        if not session:
-            return
-
-        execute_command_params = {
-            "command": "texlab.cleanAuxiliary",
-            "arguments": [text_document_identifier(self.view)]
-        }  # type: ExecuteCommandParams
-        session.execute_command(execute_command_params, False)
-
-
-class LspTexlabCleanArtifactsCommand(LspTextCommand):
-
-    session_name = PLUGIN_NAME
-
-    def run(self, _: sublime.Edit) -> None:
-        session = self.session_by_name(PLUGIN_NAME)
-        if not session:
-            return
-
-        execute_command_params = {
-            "command": "texlab.cleanArtifacts",
-            "arguments": [text_document_identifier(self.view)]
-        }  # type: ExecuteCommandParams
-        session.execute_command(execute_command_params, False)
