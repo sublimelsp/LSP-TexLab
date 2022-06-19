@@ -15,4 +15,22 @@
         "caption": "LSP-TexLab: Build",
         "command": "lsp_texlab_build",
     },
+    {
+        "caption": "LSP-TexLab: Clean Auxiliary",
+        "command": "lsp_execute",
+        "args": {
+            "session_name": "LSP-TexLab",
+            "command_name": "texlab.cleanAuxiliary",
+            "command_args": ["${document_id}"]
+        },
+    },
+    {
+        "caption": "LSP-TexLab: Clean Artifacts",
+        "command": "lsp_execute",
+        "args": {
+            "session_name": "LSP-TexLab",
+            "command_name": "texlab.cleanArtifacts",
+            "command_args": ["${document_id}"]
+        },
+    },
 ]

@@ -1,3 +1,4 @@
+from LSP.plugin.core.protocol import ExecuteCommandParams
 from .const import ARCH
 from .const import MANAGED_PLATFORM_ARCHS
 from .const import PLATFORM
@@ -121,7 +122,7 @@ class LspTexlabBuildCommand(LspTextCommand):
 
     session_name = PLUGIN_NAME
 
-    def run(self, edit: sublime.Edit) -> None:
+    def run(self, _: sublime.Edit) -> None:
         session = self.session_by_name(PLUGIN_NAME)
         if not session:
             return
