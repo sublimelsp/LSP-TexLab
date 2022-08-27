@@ -11,7 +11,9 @@ from .server import get_server_download_url
 from .tarball import decompress
 from .tarball import download
 from LSP.plugin import AbstractPlugin
+from LSP.plugin import register_plugin
 from LSP.plugin import Request
+from LSP.plugin import unregister_plugin
 from LSP.plugin.core.registry import LspTextCommand
 from LSP.plugin.core.typing import Any, Dict, List, Tuple
 from LSP.plugin.core.views import extract_variables
@@ -20,6 +22,14 @@ from LSP.plugin.core.views import text_document_position_params
 import os
 import shutil
 import sublime
+
+
+def plugin_loaded() -> None:
+    register_plugin(LspTexLabPlugin)
+
+
+def plugin_unloaded() -> None:
+    unregister_plugin(LspTexLabPlugin)
 
 
 class LspTexLabPlugin(AbstractPlugin):
