@@ -8,13 +8,13 @@ PLUGIN_NAME = "LSP-TexLab"
 SETTINGS_FILENAME = "{}.sublime-settings".format(PLUGIN_NAME)
 
 # these platforms have an official pre-built texlab binary on GitHub
-MANAGED_PLATFORM_ARCHS = {
-    "linux_arm64",
-    "linux_x64",
-    "osx_arm64",
-    "osx_x64",
-    "windows_x32",
-    "windows_x64",
+PLATFORM_ARCH_TO_TARBALL = {
+    "linux_arm64": "texlab-aarch64-linux.tar.gz",
+    "linux_x64": "texlab-x86_64-linux.tar.gz",
+    "osx_arm64": "texlab-aarch64-macos.tar.gz",
+    "osx_x64": "texlab-x86_64-macos.tar.gz",
+    "windows_x32": "texlab-i686-windows.zip",
+    "windows_x64": "texlab-x86_64-windows.zip",
 }
 
 ARCH = sublime.arch()

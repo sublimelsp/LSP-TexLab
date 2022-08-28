@@ -1,8 +1,8 @@
 from .const import ARCH
-from .const import MANAGED_PLATFORM_ARCHS
 from .const import PLATFORM
 from .const import PLATFORM_ARCH
 from .const import PLUGIN_NAME
+from .const import PLATFORM_ARCH_TO_TARBALL
 from .const import SERVER_VERSION
 from .server import get_default_server_bin_path
 from .server import get_plugin_storage_dir
@@ -47,7 +47,7 @@ class LspTexLabPlugin(AbstractPlugin):
     @classmethod
     def additional_variables(cls) -> Dict[str, str]:
         return {
-            "texlab_bin": get_default_server_bin_path() if PLATFORM_ARCH in MANAGED_PLATFORM_ARCHS else "texlab",
+            "texlab_bin": get_default_server_bin_path() if PLATFORM_ARCH in PLATFORM_ARCH_TO_TARBALL else "texlab",
         }
 
     @classmethod
@@ -56,7 +56,7 @@ class LspTexLabPlugin(AbstractPlugin):
         server_bin = command[0]
 
         # only auto manage platforms which the official server supports
-        if PLATFORM_ARCH in MANAGED_PLATFORM_ARCHS and server_bin in {"${texlab_bin}", "$texlab_bin"}:
+        if PLATFORM_ARCH in PLATFORM_ARCH_TO_TARBALL and server_bin in {"${texlab_bin}", "$texlab_bin"}:
             variables = extract_variables(sublime.active_window())
             variables.update(cls.additional_variables())
             server_bin = sublime.expand_variables(server_bin, variables)
