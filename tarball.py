@@ -1,4 +1,4 @@
-from LSP.plugin.core.typing import Optional
+from LSP.plugin.core.typing import Iterable, Optional
 import gzip
 import os
 import tarfile
@@ -14,55 +14,37 @@ def decompress(tarball: str, dst_dir: Optional[str] = None) -> None:
     :param      dst_dir:  The destination directory
     """
 
+    def tar_safe_extract(
+        tar: tarfile.TarFile,
+        path: str = ".",
+        members: Optional[Iterable[tarfile.TarInfo]] = None,
+        *,
+        numeric_owner: bool = False,
+    ) -> None:
+        def is_within_directory(directory: str, target: str) -> bool:
+            abs_directory = os.path.abspath(directory)
+            abs_target = os.path.abspath(target)
+            prefix = os.path.commonprefix((abs_directory, abs_target))
+            return prefix == abs_directory
+
+        for member in tar.getmembers():
+            member_path = os.path.join(path, member.name)
+            if not is_within_directory(path, member_path):
+                raise Exception("Attempted Path Traversal in Tar File")
+
+        tar.extractall(path, members, numeric_owner=numeric_owner)
+
     if not dst_dir:
         dst_dir = os.path.dirname(tarball)
 
     if tarball.endswith(".tar.gz"):
         with tarfile.open(tarball, "r:gz") as f:
-            def is_within_directory(directory, target):
-                
-                abs_directory = os.path.abspath(directory)
-                abs_target = os.path.abspath(target)
-            
-                prefix = os.path.commonprefix([abs_directory, abs_target])
-                
-                return prefix == abs_directory
-            
-            def safe_extract(tar, path=".", members=None, *, numeric_owner=False):
-            
-                for member in tar.getmembers():
-                    member_path = os.path.join(path, member.name)
-                    if not is_within_directory(path, member_path):
-                        raise Exception("Attempted Path Traversal in Tar File")
-            
-                tar.extractall(path, members, numeric_owner=numeric_owner) 
-                
-            
-            safe_extract(f, dst_dir)
+            tar_safe_extract(f, dst_dir)
         return
 
     if tarball.endswith(".tar"):
         with tarfile.open(tarball, "r:") as f:
-            def is_within_directory(directory, target):
-                
-                abs_directory = os.path.abspath(directory)
-                abs_target = os.path.abspath(target)
-            
-                prefix = os.path.commonprefix([abs_directory, abs_target])
-                
-                return prefix == abs_directory
-            
-            def safe_extract(tar, path=".", members=None, *, numeric_owner=False):
-            
-                for member in tar.getmembers():
-                    member_path = os.path.join(path, member.name)
-                    if not is_within_directory(path, member_path):
-                        raise Exception("Attempted Path Traversal in Tar File")
-            
-                tar.extractall(path, members, numeric_owner=numeric_owner) 
-                
-            
-            safe_extract(f, dst_dir)
+            tar_safe_extract(f, dst_dir)
         return
 
     if tarball.endswith(".zip"):
