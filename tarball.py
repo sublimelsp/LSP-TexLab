@@ -17,9 +17,7 @@ def decompress(tarball: str, dst_dir: Optional[str] = None) -> None:
     def tar_safe_extract(
         tar: tarfile.TarFile,
         path: str = ".",
-        members: Optional[Iterable[tarfile.TarInfo]] = None,
-        *,
-        numeric_owner: bool = False
+        members: Optional[Iterable[tarfile.TarInfo]] = None
     ) -> None:
         def is_within_directory(directory: str, target: str) -> bool:
             abs_directory = os.path.abspath(directory)
@@ -32,7 +30,7 @@ def decompress(tarball: str, dst_dir: Optional[str] = None) -> None:
             if not is_within_directory(path, member_path):
                 raise Exception("Attempted Path Traversal in Tar File")
 
-        tar.extractall(path, members, numeric_owner=numeric_owner)
+        tar.extractall(path, members)
 
     if not dst_dir:
         dst_dir = os.path.dirname(tarball)
