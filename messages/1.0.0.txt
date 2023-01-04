@@ -1,0 +1,4 @@
+TexLab server was updated to 5.0.0.
+
+- BREAKING: texlab.rootDirectory is now used as the folder path from which the compiler is executed relative to the main document. By default it is equal to "." (previously, it was relative to the working directory of the server process).
+For more information, please visit the [wiki](https://github.com/latex-lsp/texlab/wiki/Configuration#texlabrootdirectory).
