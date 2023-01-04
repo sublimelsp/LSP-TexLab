@@ -19,7 +19,7 @@ def decompress(tarball: str, dst_dir: Optional[str] = None) -> None:
         path: str = ".",
         members: Optional[Iterable[tarfile.TarInfo]] = None,
         *,
-        numeric_owner: bool = False,
+        numeric_owner: bool = False
     ) -> None:
         def is_within_directory(directory: str, target: str) -> bool:
             abs_directory = os.path.abspath(directory)

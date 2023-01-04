@@ -20,7 +20,7 @@ exclude = '(\.git|\.?venv|\.mypy_cache|br-.*|branch-.*|libs|stubs|typings)/'
 
 [tool.black]
 line-length = 120
-target-version = ['py38']
+target-version = ['py33']
 exclude = '''
 /(
   \.git |
