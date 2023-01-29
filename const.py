@@ -2,7 +2,7 @@ import sublime
 
 
 # @see https://github.com/latex-lsp/texlab/releases
-SERVER_VERSION = "v5.0.0"
+SERVER_VERSION = "v5.2.0"
 
 PLUGIN_NAME = "LSP-TexLab"
 SETTINGS_FILENAME = "{}.sublime-settings".format(PLUGIN_NAME)
