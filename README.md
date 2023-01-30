@@ -2,7 +2,7 @@
 
 LaTeX support for Sublime's LSP plugin provided through [latex-lsp/texlab](https://github.com/latex-lsp/texlab).
 
-Note that this plugin requires ST >= 4070 and only supports x64 system.
+Note that this plugin requires ST >= 4070.
 
 ## Installation
 
