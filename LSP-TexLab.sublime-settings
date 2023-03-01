@@ -58,12 +58,13 @@
 		// Modifies linebreaks before, during, and at the end of code blocks when formatting with latexindent.
 		// This corresponds to the --modifylinebreaks flag of latexindent.
 		"texlab.latexindent.modifyLineBreaks": false,
-		////////////////
-		// DEPRECATED //
-		////////////////
-		// [Deprecated] See https://github.com/latex-lsp/texlab/blob/v3.2.0/CHANGELOG.md
-		// Set this property to true if the build arguments imply a continous build
-		"texlab.build.isContinuous": false,
+		// A list of regular expressions used to filter the list of reported document symbols.
+		// If specified, only symbols that match at least one of the specified patterns are sent to the client.
+		// Symbols are filtered recursively so nested symbols can still be sent to the client even though the parent node is removed from the results.
+		"texlab.symbols.allowedPatterns": [],
+		// A list of regular expressions used to filter the list of reported document symbols.
+		// If specified, only symbols that match none of the specified patterns are sent to the client.
+		"texlab.symbols.ignoredPatterns": [],
 	},
 	//////////////////////
 	// non-LSP settings //
