@@ -33,4 +33,13 @@
             "command_args": ["${document_id}"]
         },
     },
+    {
+        "caption": "LSP-TexLab: Cancel Build",
+        "command": "lsp_execute",
+        "args": {
+            "session_name": "LSP-TexLab",
+            "command_name": "texlab.cancelBuild",
+            "command_args": []
+        },
+    },
 ]
