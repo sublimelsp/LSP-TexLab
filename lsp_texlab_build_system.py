@@ -13,5 +13,3 @@ class LspTexlabBuildSystemCommand(sublime_plugin.WindowCommand):
         view = self.window.active_view()
         if view:
             view.run_command("lsp_texlab_build")
-        # Diabled: With TexLab 3+ user should use "-pvc"
-        # self.window.active_view().run_command("lsp_texlab_forward_search")
