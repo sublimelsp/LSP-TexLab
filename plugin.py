@@ -17,9 +17,10 @@ from LSP.plugin import unregister_plugin
 from LSP.plugin.core.registry import LspTextCommand
 from LSP.plugin.core.typing import Any, Dict, List, Tuple
 from LSP.plugin.core.views import extract_variables
+from LSP.plugin.core.views import first_selection_region
+from LSP.plugin.core.views import offset_to_point
 from LSP.plugin.core.views import text_document_identifier
 from LSP.plugin.core.views import text_document_position_params
-from LSP.plugin.core.views import position
 import os
 import shutil
 import sublime
@@ -137,10 +138,10 @@ class LspTexlabBuildCommand(LspTextCommand):
         if not session:
             return
         params = {"textDocument": text_document_identifier(self.view)}
-        try:
-            params["position"] = position(self.view(), next(iter(self.view.sel())).a)
-        except StopIteration:
-            pass
+        region = first_selection_region(self.view)
+        if region is not None:
+            params["position"] = offset_to_point(self.view, region.b).to_lsp()
+
         session.send_request(Request("textDocument/build", params), self.on_response_async, self.on_error_async)
 
     def on_response_async(self, response: Any) -> None:
