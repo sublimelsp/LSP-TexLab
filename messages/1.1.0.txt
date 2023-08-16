@@ -1,0 +1,7 @@
+LSP-TexLab was updated to 1.1.0 (TexLab 5.9.2)
+
+- *BREAKING* setting texlab.auxDirectory deprecated in favor of texlab.build.auxDirectory
+
+- Added setting texlab.build.logDirectory
+- Added setting texlab.build.pdfDirectory
+- Improved forward serach position when building

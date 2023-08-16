@@ -28,7 +28,9 @@
 		// Defines the directory containing the build artifacts.
 		// Note that you need to set the output directory in texlab.build.args too,
 		// if you want to change the build directory.
-		"texlab.auxDirectory": ".",
+		"texlab.build.auxDirectory": ".",
+		"texlab.build.logDirectory": ".",
+		"texlab.build.pdfDirectory": ".",
 		// Defines the executable of the PDF previewer.
 		"texlab.forwardSearch.executable": null,
 		// Defines additional arguments that are 
