@@ -1,29 +1,33 @@
-from .const import ARCH
-from .const import PLATFORM
-from .const import PLATFORM_ARCH
-from .const import PLUGIN_NAME
-from .const import PLATFORM_ARCH_TO_TARBALL
-from .const import SERVER_VERSION
-from .server import get_default_server_bin_path
-from .server import get_plugin_storage_dir
-from .server import get_server_dir
-from .server import get_server_download_url
-from .tarball import decompress
-from .tarball import download
-from LSP.plugin import AbstractPlugin
-from LSP.plugin import register_plugin
-from LSP.plugin import Request
-from LSP.plugin import unregister_plugin
-from LSP.plugin.core.registry import LspTextCommand
-from LSP.plugin.core.typing import Any, Dict, List, Tuple
-from LSP.plugin.core.views import extract_variables
-from LSP.plugin.core.views import first_selection_region
-from LSP.plugin.core.views import offset_to_point
-from LSP.plugin.core.views import text_document_identifier
-from LSP.plugin.core.views import text_document_position_params
 import os
 import shutil
+
 import sublime
+from LSP.plugin import AbstractPlugin, Request, register_plugin, unregister_plugin
+from LSP.plugin.core.registry import LspTextCommand
+from LSP.plugin.core.typing import Any, Dict, List, Tuple
+from LSP.plugin.core.views import (
+    extract_variables,
+    first_selection_region,
+    offset_to_point,
+    text_document_identifier,
+    text_document_position_params,
+)
+
+from .const import (
+    ARCH,
+    PLATFORM,
+    PLATFORM_ARCH,
+    PLATFORM_ARCH_TO_TARBALL,
+    PLUGIN_NAME,
+    SERVER_VERSION,
+)
+from .server import (
+    get_default_server_bin_path,
+    get_plugin_storage_dir,
+    get_server_dir,
+    get_server_download_url,
+)
+from .tarball import decompress, download
 
 
 def plugin_loaded() -> None:
@@ -49,7 +53,9 @@ class LspTexLabPlugin(AbstractPlugin):
     @classmethod
     def additional_variables(cls) -> Dict[str, str]:
         return {
-            "texlab_bin": get_default_server_bin_path() if PLATFORM_ARCH in PLATFORM_ARCH_TO_TARBALL else "texlab",
+            "texlab_bin": get_default_server_bin_path()
+            if PLATFORM_ARCH in PLATFORM_ARCH_TO_TARBALL
+            else "texlab",
         }
 
     @classmethod
@@ -58,7 +64,10 @@ class LspTexLabPlugin(AbstractPlugin):
         server_bin = command[0]
 
         # only auto manage platforms which the official server supports
-        if PLATFORM_ARCH in PLATFORM_ARCH_TO_TARBALL and server_bin in {"${texlab_bin}", "$texlab_bin"}:
+        if PLATFORM_ARCH in PLATFORM_ARCH_TO_TARBALL and server_bin in {
+            "${texlab_bin}",
+            "$texlab_bin",
+        }:
             variables = extract_variables(sublime.active_window())
             variables.update(cls.additional_variables())
             server_bin = sublime.expand_variables(server_bin, variables)
@@ -101,7 +110,6 @@ class LspTexLabPlugin(AbstractPlugin):
 
 
 class LspTexlabForwardSearchCommand(LspTextCommand):
-
     session_name = PLUGIN_NAME
 
     def run(self, _: sublime.Edit) -> None:
@@ -109,7 +117,11 @@ class LspTexlabForwardSearchCommand(LspTextCommand):
         if not session:
             return
         params = text_document_position_params(self.view, next(iter(self.view.sel())).a)
-        session.send_request(Request("textDocument/forwardSearch", params), self.on_response_async, self.on_error_async)
+        session.send_request(
+            Request("textDocument/forwardSearch", params),
+            self.on_response_async,
+            self.on_error_async,
+        )
 
     def on_response_async(self, response: Any) -> None:
         status = response["status"]
@@ -121,7 +133,9 @@ class LspTexlabForwardSearchCommand(LspTextCommand):
         elif status == 1:
             window.status_message(PLUGIN_NAME + ": Previewer exited with errors")
         elif status == 2:
-            window.status_message(PLUGIN_NAME + ": Previewer failed to start or crashed")
+            window.status_message(
+                PLUGIN_NAME + ": Previewer failed to start or crashed"
+            )
         elif status == 3:
             window.status_message(PLUGIN_NAME + ": Previewer is not configured")
 
@@ -130,7 +144,6 @@ class LspTexlabForwardSearchCommand(LspTextCommand):
 
 
 class LspTexlabBuildCommand(LspTextCommand):
-
     session_name = PLUGIN_NAME
 
     def run(self, _: sublime.Edit) -> None:
@@ -142,7 +155,11 @@ class LspTexlabBuildCommand(LspTextCommand):
         if region is not None:
             params["position"] = offset_to_point(self.view, region.b).to_lsp()
 
-        session.send_request(Request("textDocument/build", params), self.on_response_async, self.on_error_async)
+        session.send_request(
+            Request("textDocument/build", params),
+            self.on_response_async,
+            self.on_error_async,
+        )
 
     def on_response_async(self, response: Any) -> None:
         status = response["status"]

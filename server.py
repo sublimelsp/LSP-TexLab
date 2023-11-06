@@ -1,20 +1,26 @@
-from .const import ARCH
-from .const import PLATFORM
-from .const import PLUGIN_NAME
-from .const import PLATFORM_ARCH_TO_TARBALL
-from .const import SERVER_VERSION
-from .const import SETTINGS_FILENAME
-from functools import lru_cache
-from LSP.plugin.core.typing import Optional
 import os
+from functools import lru_cache
+
 import sublime
+from LSP.plugin.core.typing import Optional
+
+from .const import (
+    ARCH,
+    PLATFORM,
+    PLATFORM_ARCH_TO_TARBALL,
+    PLUGIN_NAME,
+    SERVER_VERSION,
+    SETTINGS_FILENAME,
+)
 
 
 @lru_cache()
 def get_plugin_storage_dir() -> str:
     """Gets this plugin's storage dir."""
 
-    return os.path.abspath(os.path.join(sublime.cache_path(), "..", "Package Storage", PLUGIN_NAME))
+    return os.path.abspath(
+        os.path.join(sublime.cache_path(), "..", "Package Storage", PLUGIN_NAME)
+    )
 
 
 @lru_cache()
