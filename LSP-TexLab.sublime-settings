@@ -67,6 +67,10 @@
 		// A list of regular expressions used to filter the list of reported document symbols.
 		// If specified, only symbols that match none of the specified patterns are sent to the client.
 		"texlab.symbols.ignoredPatterns": [],
+		// Show inlay hints at label definitions
+		"texlab.inlayHints.labelDefinitions": false,
+		// Show inlay hints at label references
+		"texlab.inlayHints.labelReferences": true,
 	},
 	//////////////////////
 	// non-LSP settings //
