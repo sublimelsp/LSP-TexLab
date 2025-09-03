@@ -3,6 +3,7 @@
 .github/ export-ignore
 .gitignore export-ignore
 codecov.yml export-ignore
+renovate.json export-ignore
 pyproject.toml export-ignore
 tests/ export-ignore
 tox.ini export-ignore
