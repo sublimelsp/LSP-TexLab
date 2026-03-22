@@ -1,8 +1,9 @@
+from __future__ import annotations
+
 import os
 from functools import lru_cache
 
 import sublime
-from LSP.plugin.core.typing import Optional
 
 from .const import (
     ARCH,
@@ -14,7 +15,7 @@ from .const import (
 )
 
 
-@lru_cache()
+@lru_cache
 def get_plugin_storage_dir() -> str:
     """Gets this plugin's storage dir."""
 
@@ -23,8 +24,8 @@ def get_plugin_storage_dir() -> str:
     )
 
 
-@lru_cache()
-def get_server_download_url(version: str, platform: str, arch: str) -> Optional[str]:
+@lru_cache
+def get_server_download_url(version: str, platform: str, arch: str) -> str | None:
     """
     Gets the LSP server download URL.
 
@@ -35,7 +36,7 @@ def get_server_download_url(version: str, platform: str, arch: str) -> Optional[
 
     settings = sublime.load_settings(SETTINGS_FILENAME)
     url = settings.get("lsp_server_download_url", "")  # type: str
-    tarball = PLATFORM_ARCH_TO_TARBALL.get("{}_{}".format(platform, arch), "")
+    tarball = PLATFORM_ARCH_TO_TARBALL.get(f"{platform}_{arch}", "")
 
     if not (url and tarball):
         return None
@@ -49,16 +50,16 @@ def get_server_download_url(version: str, platform: str, arch: str) -> Optional[
     )
 
 
-@lru_cache()
+@lru_cache
 def get_server_dir() -> str:
     """Gets the server directory."""
 
-    server_dir = "{}-{}~{}".format(PLATFORM, ARCH, SERVER_VERSION)
+    server_dir = f"{PLATFORM}-{ARCH}~{SERVER_VERSION}"
 
     return os.path.join(get_plugin_storage_dir(), server_dir)
 
 
-@lru_cache()
+@lru_cache
 def get_default_server_bin_path() -> str:
     """Gets the default LSP server binary path."""
     return os.path.join(

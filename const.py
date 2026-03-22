@@ -1,10 +1,12 @@
+from __future__ import annotations
+
 import sublime
 
 # @see https://github.com/latex-lsp/texlab/releases
 SERVER_VERSION = "v5.11.0"
 
 PLUGIN_NAME = "LSP-TexLab"
-SETTINGS_FILENAME = "{}.sublime-settings".format(PLUGIN_NAME)
+SETTINGS_FILENAME = f"{PLUGIN_NAME}.sublime-settings"
 
 # these platforms have an official pre-built texlab binary on GitHub
 PLATFORM_ARCH_TO_TARBALL = {
@@ -18,6 +20,6 @@ PLATFORM_ARCH_TO_TARBALL = {
 
 ARCH = sublime.arch()
 PLATFORM = sublime.platform()
-PLATFORM_ARCH = "{}_{}".format(PLATFORM, ARCH)
+PLATFORM_ARCH = f"{PLATFORM}_{ARCH}"
 ST_CHANNEL = sublime.channel()
 ST_VERSION = sublime.version()

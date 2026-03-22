@@ -34,4 +34,8 @@ exclude = '''
 '''
 
 [tool.pyright]
-pythonVersion = '3.11'
+pythonVersion = '3.8'
+
+[tool.ruff]
+target-version = 'py38'
+
