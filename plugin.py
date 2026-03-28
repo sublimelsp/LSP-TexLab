@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import os
 import shutil
-from typing import TypedDict, cast
+from typing import Any, TypedDict, cast
 
 import sublime
 from LSP.plugin import (
