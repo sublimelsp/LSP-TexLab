@@ -25,6 +25,8 @@ There are some ways to configure the package and the language server.
 | lsp_texlab_forward_search | Performs a forward search from the first cursor position |
 | lsp_texlab_build          | Build the current file                                   |
 
+You can bind those commands to any key in your `Preferences: Key Bindings`.
+
 ## For Plugin Developer
 
 The targeted version of `texlab` is defined in `const.py`.
