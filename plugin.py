@@ -1,10 +1,17 @@
+from __future__ import annotations
+
 import os
 import shutil
+from typing import TypedDict, cast
 
 import sublime
-from LSP.plugin import AbstractPlugin, Request, register_plugin, unregister_plugin
-from LSP.plugin.core.registry import LspTextCommand
-from LSP.plugin.core.typing import Any, Dict, List, Tuple
+from LSP.plugin import (
+    AbstractPlugin,
+    LspTextCommand,
+    Request,
+    register_plugin,
+    unregister_plugin,
+)
 from LSP.plugin.core.views import (
     extract_variables,
     first_selection_region,
@@ -12,6 +19,8 @@ from LSP.plugin.core.views import (
     text_document_identifier,
     text_document_position_params,
 )
+from LSP.protocol import Position, TextDocumentIdentifier
+from typing_extensions import NotRequired
 
 from .const import (
     ARCH,
@@ -30,6 +39,11 @@ from .server import (
 from .tarball import decompress, download
 
 
+class TextDocumentBuildParams(TypedDict):
+    textDocument: TextDocumentIdentifier
+    position: NotRequired[Position]
+
+
 def plugin_loaded() -> None:
     register_plugin(LspTexLabPlugin)
 
@@ -44,14 +58,14 @@ class LspTexLabPlugin(AbstractPlugin):
         return PLUGIN_NAME
 
     @classmethod
-    def configuration(cls) -> Tuple[sublime.Settings, str]:
+    def configuration(cls) -> tuple[sublime.Settings, str]:
         name = cls.name()
-        basename = "{}.sublime-settings".format(name)
-        filepath = "Packages/{}/{}".format(name, basename)
+        basename = f"{name}.sublime-settings"
+        filepath = f"Packages/{name}/{basename}"
         return sublime.load_settings(basename), filepath
 
     @classmethod
-    def additional_variables(cls) -> Dict[str, str]:
+    def additional_variables(cls) -> dict[str, str]:
         return {
             "texlab_bin": get_default_server_bin_path()
             if PLATFORM_ARCH in PLATFORM_ARCH_TO_TARBALL
@@ -60,7 +74,7 @@ class LspTexLabPlugin(AbstractPlugin):
 
     @classmethod
     def needs_update_or_installation(cls) -> bool:
-        command = cls.configuration()[0].get("command")  # type: List[str]
+        command = cast(list[str], cls.configuration()[0].get("command"))
         server_bin = command[0]
 
         # only auto manage platforms which the official server supports
@@ -150,7 +164,7 @@ class LspTexlabBuildCommand(LspTextCommand):
         session = self.session_by_name(PLUGIN_NAME)
         if not session:
             return
-        params = {"textDocument": text_document_identifier(self.view)}
+        params: TextDocumentBuildParams = {"textDocument": text_document_identifier(self.view)}
         region = first_selection_region(self.view)
         if region is not None:
             params["position"] = offset_to_point(self.view, region.b).to_lsp()

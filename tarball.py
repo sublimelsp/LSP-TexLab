@@ -1,13 +1,14 @@
+from __future__ import annotations
+
 import gzip
 import os
 import tarfile
 import urllib.request
 import zipfile
+from collections.abc import Iterable
 
-from LSP.plugin.core.typing import Iterable, Optional
 
-
-def decompress(tarball: str, dst_dir: Optional[str] = None) -> None:
+def decompress(tarball: str, dst_dir: str | None = None) -> None:
     """
     Decompress the tarball.
 
@@ -18,7 +19,7 @@ def decompress(tarball: str, dst_dir: Optional[str] = None) -> None:
     def tar_safe_extract(
         tar: tarfile.TarFile,
         path: str = ".",
-        members: Optional[Iterable[tarfile.TarInfo]] = None,
+        members: Iterable[tarfile.TarInfo] | None = None,
     ) -> None:
         def is_within_directory(directory: str, target: str) -> bool:
             abs_directory = os.path.abspath(directory)
