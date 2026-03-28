@@ -3,7 +3,7 @@ from __future__ import annotations
 import sublime
 
 # @see https://github.com/latex-lsp/texlab/releases
-SERVER_VERSION = "v5.11.0"
+SERVER_VERSION = "v5.25.1"
 
 PLUGIN_NAME = "LSP-TexLab"
 SETTINGS_FILENAME = f"{PLUGIN_NAME}.sublime-settings"
