@@ -5,7 +5,6 @@
 	"command": ["${texlab_bin}"],
 	"selector": "text.tex | text.bibtex",
 	"auto_complete_selector": "text.tex - comment",
-	"initializationOptions": {},
 	// @see https://github.com/latex-lsp/texlab/blob/master/docs/options.md
 	"settings": {
 		// Defines the directory from which the source files get compiled.
