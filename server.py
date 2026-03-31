@@ -1,18 +1,14 @@
 from __future__ import annotations
 
-import os
+from .const import ARCH
+from .const import PLATFORM
+from .const import PLATFORM_ARCH_TO_TARBALL
+from .const import PLUGIN_NAME
+from .const import SERVER_VERSION
+from .const import SETTINGS_FILENAME
 from functools import lru_cache
-
+import os
 import sublime
-
-from .const import (
-    ARCH,
-    PLATFORM,
-    PLATFORM_ARCH_TO_TARBALL,
-    PLUGIN_NAME,
-    SERVER_VERSION,
-    SETTINGS_FILENAME,
-)
 
 
 @lru_cache

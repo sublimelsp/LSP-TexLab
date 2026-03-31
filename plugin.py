@@ -1,42 +1,36 @@
 from __future__ import annotations
 
+from .const import ARCH
+from .const import PLATFORM
+from .const import PLATFORM_ARCH
+from .const import PLATFORM_ARCH_TO_TARBALL
+from .const import PLUGIN_NAME
+from .const import SERVER_VERSION
+from .server import get_default_server_bin_path
+from .server import get_plugin_storage_dir
+from .server import get_server_dir
+from .server import get_server_download_url
+from .tarball import decompress
+from .tarball import download
+from LSP.plugin import AbstractPlugin
+from LSP.plugin import LspTextCommand
+from LSP.plugin import register_plugin
+from LSP.plugin import Request
+from LSP.plugin import unregister_plugin
+from LSP.plugin.core.views import extract_variables
+from LSP.plugin.core.views import first_selection_region
+from LSP.plugin.core.views import offset_to_point
+from LSP.plugin.core.views import text_document_identifier
+from LSP.plugin.core.views import text_document_position_params
+from LSP.protocol import Position
+from LSP.protocol import TextDocumentIdentifier
+from typing import Any
+from typing import cast
+from typing import TypedDict
+from typing_extensions import NotRequired
 import os
 import shutil
-from typing import Any, TypedDict, cast
-
 import sublime
-from LSP.plugin import (
-    AbstractPlugin,
-    LspTextCommand,
-    Request,
-    register_plugin,
-    unregister_plugin,
-)
-from LSP.plugin.core.views import (
-    extract_variables,
-    first_selection_region,
-    offset_to_point,
-    text_document_identifier,
-    text_document_position_params,
-)
-from LSP.protocol import Position, TextDocumentIdentifier
-from typing_extensions import NotRequired
-
-from .const import (
-    ARCH,
-    PLATFORM,
-    PLATFORM_ARCH,
-    PLATFORM_ARCH_TO_TARBALL,
-    PLUGIN_NAME,
-    SERVER_VERSION,
-)
-from .server import (
-    get_default_server_bin_path,
-    get_plugin_storage_dir,
-    get_server_dir,
-    get_server_download_url,
-)
-from .tarball import decompress, download
 
 
 class TextDocumentBuildParams(TypedDict):
