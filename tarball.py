@@ -1,11 +1,11 @@
 from __future__ import annotations
 
-from collections.abc import Iterable
 import gzip
 import os
 import tarfile
 import urllib.request
 import zipfile
+from collections.abc import Iterable
 
 
 def decompress(tarball: str, dst_dir: str | None = None) -> None:
