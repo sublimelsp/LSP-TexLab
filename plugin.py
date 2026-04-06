@@ -74,7 +74,7 @@ class LspTexLabPlugin(AbstractPlugin):
 
     @classmethod
     def needs_update_or_installation(cls) -> bool:
-        command = cast(list[str], cls.configuration()[0].get("command"))
+        command = cast('list[str]', cls.configuration()[0].get("command"))
         server_bin = command[0]
 
         # only auto manage platforms which the official server supports
