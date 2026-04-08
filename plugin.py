@@ -5,13 +5,7 @@ import shutil
 from typing import Any, TypedDict, cast
 
 import sublime
-from LSP.plugin import (
-    AbstractPlugin,
-    LspTextCommand,
-    Request,
-    register_plugin,
-    unregister_plugin,
-)
+from LSP.plugin import AbstractPlugin, LspTextCommand, Request, register_plugin, unregister_plugin
 from LSP.plugin.core.views import (
     extract_variables,
     first_selection_region,
@@ -22,20 +16,8 @@ from LSP.plugin.core.views import (
 from LSP.protocol import Position, TextDocumentIdentifier
 from typing_extensions import NotRequired
 
-from .const import (
-    ARCH,
-    PLATFORM,
-    PLATFORM_ARCH,
-    PLATFORM_ARCH_TO_TARBALL,
-    PLUGIN_NAME,
-    SERVER_VERSION,
-)
-from .server import (
-    get_default_server_bin_path,
-    get_plugin_storage_dir,
-    get_server_dir,
-    get_server_download_url,
-)
+from .const import ARCH, PLATFORM, PLATFORM_ARCH, PLATFORM_ARCH_TO_TARBALL, PLUGIN_NAME, SERVER_VERSION
+from .server import get_default_server_bin_path, get_plugin_storage_dir, get_server_dir, get_server_download_url
 from .tarball import decompress, download
 
 

@@ -5,14 +5,7 @@ from functools import lru_cache
 
 import sublime
 
-from .const import (
-    ARCH,
-    PLATFORM,
-    PLATFORM_ARCH_TO_TARBALL,
-    PLUGIN_NAME,
-    SERVER_VERSION,
-    SETTINGS_FILENAME,
-)
+from .const import ARCH, PLATFORM, PLATFORM_ARCH_TO_TARBALL, PLUGIN_NAME, SERVER_VERSION, SETTINGS_FILENAME
 
 
 @lru_cache
