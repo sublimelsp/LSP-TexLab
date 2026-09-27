@@ -5,14 +5,18 @@ import shutil
 from typing import Any, TypedDict, cast
 
 import sublime
-from LSP.plugin import AbstractPlugin, LspTextCommand, Request, register_plugin, unregister_plugin
-from LSP.plugin.core.views import (
-    extract_variables,
+from LSP.plugin import (
+    AbstractPlugin,
+    LspTextCommand,
+    Request,
     first_selection_region,
-    offset_to_point,
+    offset_to_position,
+    register_plugin,
     text_document_identifier,
     text_document_position_params,
+    unregister_plugin,
 )
+from LSP.plugin.core.views import extract_variables
 from LSP.protocol import Position, TextDocumentIdentifier
 from typing_extensions import NotRequired
 
@@ -149,7 +153,7 @@ class LspTexlabBuildCommand(LspTextCommand):
         params: TextDocumentBuildParams = {"textDocument": text_document_identifier(self.view)}
         region = first_selection_region(self.view)
         if region is not None:
-            params["position"] = offset_to_point(self.view, region.b).to_lsp()
+            params["position"] = offset_to_position(self.view, region.b)
 
         session.send_request(
             Request("textDocument/build", params),
