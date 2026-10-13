@@ -2,21 +2,19 @@ from __future__ import annotations
 
 import os
 import shutil
-from typing import Any, TypedDict, cast
+from typing import Any, TypedDict
 
 import sublime
 from LSP.plugin import (
-    AbstractPlugin,
+    LspPlugin,
     LspTextCommand,
+    OnPreStartContext,
     Request,
     first_selection_region,
     offset_to_position,
-    register_plugin,
     text_document_identifier,
     text_document_position_params,
-    unregister_plugin,
 )
-from LSP.plugin.core.views import extract_variables
 from LSP.protocol import Position, TextDocumentIdentifier
 from typing_extensions import NotRequired
 
@@ -31,36 +29,24 @@ class TextDocumentBuildParams(TypedDict):
 
 
 def plugin_loaded() -> None:
-    register_plugin(LspTexLabPlugin)
+    LspTexLabPlugin.register()
 
 
 def plugin_unloaded() -> None:
-    unregister_plugin(LspTexLabPlugin)
+    LspTexLabPlugin.unregister()
 
 
-class LspTexLabPlugin(AbstractPlugin):
+class LspTexLabPlugin(LspPlugin):
     @classmethod
-    def name(cls) -> str:
-        return PLUGIN_NAME
-
-    @classmethod
-    def configuration(cls) -> tuple[sublime.Settings, str]:
-        name = cls.name()
-        basename = f"{name}.sublime-settings"
-        filepath = f"Packages/{name}/{basename}"
-        return sublime.load_settings(basename), filepath
+    def on_pre_start_async(cls, context: OnPreStartContext) -> None:
+        context.variables["texlab_bin"] = (
+            get_default_server_bin_path() if PLATFORM_ARCH in PLATFORM_ARCH_TO_TARBALL else "texlab"
+        )
+        if cls.needs_update_or_installation(context.configuration.command, context.variables):
+            cls.install_or_update()
 
     @classmethod
-    def additional_variables(cls) -> dict[str, str]:
-        return {
-            "texlab_bin": get_default_server_bin_path()
-            if PLATFORM_ARCH in PLATFORM_ARCH_TO_TARBALL
-            else "texlab",
-        }
-
-    @classmethod
-    def needs_update_or_installation(cls) -> bool:
-        command = cast('list[str]', cls.configuration()[0].get("command"))
+    def needs_update_or_installation(cls, command: list[str], variables: dict[str, str]) -> bool:
         server_bin = command[0]
 
         # only auto manage platforms which the official server supports
@@ -68,8 +54,6 @@ class LspTexLabPlugin(AbstractPlugin):
             "${texlab_bin}",
             "$texlab_bin",
         }:
-            variables = extract_variables(sublime.active_window())
-            variables.update(cls.additional_variables())
             server_bin = sublime.expand_variables(server_bin, variables)
             return not os.path.isfile(server_bin)
 
