@@ -2,26 +2,24 @@ from __future__ import annotations
 
 import os
 import shutil
-from typing import Any, TypedDict, cast
+from typing import Any, TypedDict
 
 import sublime
 from LSP.plugin import (
-    AbstractPlugin,
+    LspPlugin,
     LspTextCommand,
+    OnPreStartContext,
     Request,
     first_selection_region,
     offset_to_position,
-    register_plugin,
     text_document_identifier,
     text_document_position_params,
-    unregister_plugin,
 )
-from LSP.plugin.core.views import extract_variables
 from LSP.protocol import Position, TextDocumentIdentifier
 from typing_extensions import NotRequired
 
 from .const import ARCH, PLATFORM, PLATFORM_ARCH, PLATFORM_ARCH_TO_TARBALL, PLUGIN_NAME, SERVER_VERSION
-from .server import get_default_server_bin_path, get_plugin_storage_dir, get_server_dir, get_server_download_url
+from .server import get_default_server_bin_path, get_server_dir, get_server_download_url
 from .tarball import decompress, download
 
 
@@ -31,36 +29,26 @@ class TextDocumentBuildParams(TypedDict):
 
 
 def plugin_loaded() -> None:
-    register_plugin(LspTexLabPlugin)
+    LspTexLabPlugin.register()
 
 
 def plugin_unloaded() -> None:
-    unregister_plugin(LspTexLabPlugin)
+    LspTexLabPlugin.unregister()
 
 
-class LspTexLabPlugin(AbstractPlugin):
+class LspTexLabPlugin(LspPlugin):
     @classmethod
-    def name(cls) -> str:
-        return PLUGIN_NAME
-
-    @classmethod
-    def configuration(cls) -> tuple[sublime.Settings, str]:
-        name = cls.name()
-        basename = f"{name}.sublime-settings"
-        filepath = f"Packages/{name}/{basename}"
-        return sublime.load_settings(basename), filepath
-
-    @classmethod
-    def additional_variables(cls) -> dict[str, str]:
-        return {
-            "texlab_bin": get_default_server_bin_path()
+    def on_pre_start_async(cls, context: OnPreStartContext) -> None:
+        context.variables["texlab_bin"] = (
+            get_default_server_bin_path(str(cls.plugin_storage_path))
             if PLATFORM_ARCH in PLATFORM_ARCH_TO_TARBALL
-            else "texlab",
-        }
+            else "texlab"
+        )
+        if cls.needs_update_or_installation(context.configuration.command, context.variables):
+            cls.install_or_update()
 
     @classmethod
-    def needs_update_or_installation(cls) -> bool:
-        command = cast('list[str]', cls.configuration()[0].get("command"))
+    def needs_update_or_installation(cls, command: list[str], variables: dict[str, str]) -> bool:
         server_bin = command[0]
 
         # only auto manage platforms which the official server supports
@@ -68,8 +56,6 @@ class LspTexLabPlugin(AbstractPlugin):
             "${texlab_bin}",
             "$texlab_bin",
         }:
-            variables = extract_variables(sublime.active_window())
-            variables.update(cls.additional_variables())
             server_bin = sublime.expand_variables(server_bin, variables)
             return not os.path.isfile(server_bin)
 
@@ -89,7 +75,7 @@ class LspTexLabPlugin(AbstractPlugin):
     def _prepare_server_bin(cls) -> bool:
         """Download the LSP server binary."""
 
-        server_dir = get_server_dir()
+        server_dir = get_server_dir(str(cls.plugin_storage_path))
         download_url = get_server_download_url(SERVER_VERSION, PLATFORM, ARCH)
         if not download_url:
             return False
@@ -106,7 +92,7 @@ class LspTexLabPlugin(AbstractPlugin):
     def _cleanup_cache(cls) -> None:
         """Clean up this plugin's cache directory."""
 
-        shutil.rmtree(get_plugin_storage_dir(), ignore_errors=True)
+        shutil.rmtree(cls.plugin_storage_path, ignore_errors=True)
 
 
 class LspTexlabForwardSearchCommand(LspTextCommand):

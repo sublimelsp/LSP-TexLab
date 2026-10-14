@@ -3,5 +3,3 @@ file: main.tex
 # The unclosed brace is a syntax error.
 expected_diagnostics:
   severity: 1
-# Starting the server includes downloading it.
-diagnostics_timeout: 240
