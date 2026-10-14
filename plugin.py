@@ -19,7 +19,7 @@ from LSP.protocol import Position, TextDocumentIdentifier
 from typing_extensions import NotRequired
 
 from .const import ARCH, PLATFORM, PLATFORM_ARCH, PLATFORM_ARCH_TO_TARBALL, PLUGIN_NAME, SERVER_VERSION
-from .server import get_default_server_bin_path, get_plugin_storage_dir, get_server_dir, get_server_download_url
+from .server import get_default_server_bin_path, get_server_dir, get_server_download_url
 from .tarball import decompress, download
 
 
@@ -40,7 +40,9 @@ class LspTexLabPlugin(LspPlugin):
     @classmethod
     def on_pre_start_async(cls, context: OnPreStartContext) -> None:
         context.variables["texlab_bin"] = (
-            get_default_server_bin_path() if PLATFORM_ARCH in PLATFORM_ARCH_TO_TARBALL else "texlab"
+            get_default_server_bin_path(str(cls.plugin_storage_path))
+            if PLATFORM_ARCH in PLATFORM_ARCH_TO_TARBALL
+            else "texlab"
         )
         if cls.needs_update_or_installation(context.configuration.command, context.variables):
             cls.install_or_update()
@@ -73,7 +75,7 @@ class LspTexLabPlugin(LspPlugin):
     def _prepare_server_bin(cls) -> bool:
         """Download the LSP server binary."""
 
-        server_dir = get_server_dir()
+        server_dir = get_server_dir(str(cls.plugin_storage_path))
         download_url = get_server_download_url(SERVER_VERSION, PLATFORM, ARCH)
         if not download_url:
             return False
@@ -90,7 +92,7 @@ class LspTexLabPlugin(LspPlugin):
     def _cleanup_cache(cls) -> None:
         """Clean up this plugin's cache directory."""
 
-        shutil.rmtree(get_plugin_storage_dir(), ignore_errors=True)
+        shutil.rmtree(cls.plugin_storage_path, ignore_errors=True)
 
 
 class LspTexlabForwardSearchCommand(LspTextCommand):
