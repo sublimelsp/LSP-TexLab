@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import os
-import shutil
 from typing import Any, TypedDict
 
 import sublime
@@ -18,9 +16,8 @@ from LSP.plugin import (
 from LSP.protocol import Position, TextDocumentIdentifier
 from typing_extensions import NotRequired
 
-from .const import ARCH, PLATFORM, PLATFORM_ARCH, PLATFORM_ARCH_TO_TARBALL, PLUGIN_NAME, SERVER_VERSION
-from .server import get_default_server_bin_path, get_server_dir, get_server_download_url
-from .tarball import decompress, download
+from .const import PLUGIN_NAME
+from .server import install_server
 
 
 class TextDocumentBuildParams(TypedDict):
@@ -39,60 +36,13 @@ def plugin_unloaded() -> None:
 class LspTexLabPlugin(LspPlugin):
     @classmethod
     def on_pre_start_async(cls, context: OnPreStartContext) -> None:
-        context.variables["texlab_bin"] = (
-            get_default_server_bin_path(str(cls.plugin_storage_path))
-            if PLATFORM_ARCH in PLATFORM_ARCH_TO_TARBALL
-            else "texlab"
-        )
-        if cls.needs_update_or_installation(context.configuration.command, context.variables):
-            cls.install_or_update()
-
-    @classmethod
-    def needs_update_or_installation(cls, command: list[str], variables: dict[str, str]) -> bool:
-        server_bin = command[0]
-
-        # only auto manage platforms which the official server supports
-        if PLATFORM_ARCH in PLATFORM_ARCH_TO_TARBALL and server_bin in {
-            "${texlab_bin}",
-            "$texlab_bin",
-        }:
-            server_bin = sublime.expand_variables(server_bin, variables)
-            return not os.path.isfile(server_bin)
-
-        # for unofficial supported platforms, users have to compile texlab by themselves
-        # and adjust the "command" to use the executable
-        return False
-
-    @classmethod
-    def install_or_update(cls) -> None:
-        cls._cleanup_cache()
-
-        is_download_ok = cls._prepare_server_bin()
-        if not is_download_ok:
-            raise RuntimeError("Unable to download the server binary...")
-
-    @classmethod
-    def _prepare_server_bin(cls) -> bool:
-        """Download the LSP server binary."""
-
-        server_dir = get_server_dir(str(cls.plugin_storage_path))
-        download_url = get_server_download_url(SERVER_VERSION, PLATFORM, ARCH)
-        if not download_url:
-            return False
-
-        tarball_name = download_url.split("/")[-1]
-        tarball_path = os.path.join(server_dir, tarball_name)
-
-        download(download_url, tarball_path)
-        decompress(tarball_path, server_dir)
-
-        return True
-
-    @classmethod
-    def _cleanup_cache(cls) -> None:
-        """Clean up this plugin's cache directory."""
-
-        shutil.rmtree(cls.plugin_storage_path, ignore_errors=True)
+        server_bin = None
+        # only auto manage the server when the "command" uses it, on platforms which the official server supports
+        if context.configuration.command[:1] in (["${texlab_bin}"], ["$texlab_bin"]):
+            server_bin = install_server(cls.plugin_storage_path)
+        # for unofficially supported platforms, users have to compile texlab by themselves
+        # and adjust the "command" to use the executable (or have it on the PATH)
+        context.variables["texlab_bin"] = str(server_bin) if server_bin else "texlab"
 
 
 class LspTexlabForwardSearchCommand(LspTextCommand):

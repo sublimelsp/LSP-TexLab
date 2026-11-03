@@ -1,56 +1,70 @@
 from __future__ import annotations
 
-import os
+from pathlib import Path
 
 import sublime
+from lsp_utils import InstallDirectory, UnsupportedPlatformError, download_and_extract, select_platform_asset
 
-from .const import ARCH, PLATFORM, PLATFORM_ARCH_TO_TARBALL, SERVER_VERSION, SETTINGS_FILENAME
+from .const import PLATFORM, SERVER_ASSETS, SERVER_BINARY, SERVER_VERSION, SETTINGS_FILENAME
 
 
-def get_server_download_url(version: str, platform: str, arch: str) -> str | None:
+def get_server_asset() -> str | None:
+    """Gets the file name of the official pre-built server for the current platform, if there is one."""
+
+    try:
+        return select_platform_asset(SERVER_ASSETS)
+    except UnsupportedPlatformError:
+        return None
+
+
+def get_server_download_url(version: str, asset: str) -> str | None:
     """
     Gets the LSP server download URL.
 
-    :param      version:   The LSP server version
-    :param      platform:  The platform ("osx", "linux" or "windows")
-    :param      arch:      The arch ("x32", "x64" or "arm64")
+    :param      version:  The LSP server version
+    :param      asset:    The file name of the release asset
     """
 
     settings = sublime.load_settings(SETTINGS_FILENAME)
-    url = settings.get("lsp_server_download_url", "")  # type: str
-    tarball = PLATFORM_ARCH_TO_TARBALL.get(f"{platform}_{arch}", "")
+    url = settings.get("lsp_server_download_url", "")
 
-    if not (url and tarball):
+    if not isinstance(url, str) or not url:
         return None
 
     return url.format_map(
         {
             "version": version,
             "version_without_v": version.lstrip("v"),
-            "tarball": tarball,
+            "tarball": asset,
         }
     )
 
 
-def get_server_dir(storage_dir: str) -> str:
+def install_server(storage_dir: Path) -> Path | None:
     """
-    Gets the server directory.
+    Installs the LSP server, unless already installed, and gets the path of its binary.
 
     :param      storage_dir:  This plugin's storage dir
+
+    :returns:   The path of the server binary or `None` if there is no pre-built server for the current platform.
     """
 
-    server_dir = f"{PLATFORM}-{ARCH}~{SERVER_VERSION}"
+    asset = get_server_asset()
+    if not asset:
+        return None
+    url = get_server_download_url(SERVER_VERSION, asset)
+    if not url:
+        return None
 
-    return os.path.join(storage_dir, server_dir)
-
-
-def get_default_server_bin_path(storage_dir: str) -> str:
-    """
-    Gets the default LSP server binary path.
-
-    :param      storage_dir:  This plugin's storage dir
-    """
-    return os.path.join(
-        get_server_dir(storage_dir),
-        "texlab.exe" if PLATFORM == "windows" else "texlab",
+    install_dir = InstallDirectory(
+        storage_dir,
+        "server",
+        SERVER_VERSION,
+        url,
+        # unversioned directories (named "{platform}-{arch}~{version}") used by previous releases
+        legacy_dirs=list(storage_dir.glob(f"{PLATFORM}-*~*")),
     )
+    server_dir = install_dir.install(
+        lambda path: download_and_extract(url, path, filename=asset, executables=[SERVER_BINARY])
+    )
+    return server_dir / SERVER_BINARY
