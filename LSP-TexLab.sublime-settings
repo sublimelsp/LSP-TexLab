@@ -1,10 +1,7 @@
 {
-	//////////////////
-	// LSP settings //
-	//////////////////
 	"command": ["${texlab_bin}"],
-	"selector": "text.tex | text.bibtex",
-	"auto_complete_selector": "text.tex - comment",
+	// If you have a problem connecting to GitHub, you may change the URL to a GitHub mirror.
+	"lsp_server_download_url": "https://github.com/latex-lsp/texlab/releases/download/{version}/{tarball}",
 	// @see https://github.com/latex-lsp/texlab/blob/master/docs/options.md
 	"settings": {
 		// Defines the directory from which the source files get compiled.
@@ -71,9 +68,6 @@
 		// Show inlay hints at label references
 		"texlab.inlayHints.labelReferences": true,
 	},
-	//////////////////////
-	// non-LSP settings //
-	//////////////////////
-	// If you have a problem connecting to GitHub, you may change the URL to a GitHub mirror.
-	"lsp_server_download_url": "https://github.com/latex-lsp/texlab/releases/download/{version}/{tarball}",
+	"selector": "text.tex | text.bibtex",
+	"auto_complete_selector": "text.tex - comment",
 }
