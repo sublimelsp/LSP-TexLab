@@ -8,7 +8,7 @@
     {
       "customType": "regex",
       "managerFilePatterns": [
-        "/^const\\.py$/"
+        "/^plugin\\.py$/"
       ],
       "matchStrings": [
         "SERVER_VERSION = \"(?<currentValue>.+?)\""
