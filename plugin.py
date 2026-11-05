@@ -1,11 +1,11 @@
 from __future__ import annotations
 
-import os
-import shutil
+from pathlib import Path
 from typing import Any, TypedDict
 
 import sublime
 from LSP.plugin import (
+    ClientConfig,
     LspPlugin,
     LspTextCommand,
     OnPreStartContext,
@@ -16,11 +16,33 @@ from LSP.plugin import (
     text_document_position_params,
 )
 from LSP.protocol import Position, TextDocumentIdentifier
+from lsp_utils import (
+    InstallDirectory,
+    PlatformAssets,
+    UnsupportedPlatformError,
+    download_and_extract,
+    select_platform_asset,
+)
 from typing_extensions import NotRequired
 
-from .const import ARCH, PLATFORM, PLATFORM_ARCH, PLATFORM_ARCH_TO_TARBALL, PLUGIN_NAME, SERVER_VERSION
-from .server import get_default_server_bin_path, get_server_dir, get_server_download_url
-from .tarball import decompress, download
+# @see https://github.com/latex-lsp/texlab/releases
+SERVER_VERSION = "v5.26.0"
+
+PLUGIN_NAME = "LSP-TexLab"
+
+# these platforms have an official pre-built texlab binary on GitHub
+SERVER_ASSETS: PlatformAssets = {
+    "linux-arm64": "texlab-aarch64-linux.tar.gz",
+    "linux-x64": "texlab-x86_64-linux.tar.gz",
+    "osx-arm64": "texlab-aarch64-macos.tar.gz",
+    "osx-x64": "texlab-x86_64-macos.tar.gz",
+    "windows-arm64": "texlab-aarch64-windows.zip",
+    "windows-x32": "texlab-i686-windows.zip",
+    "windows-x64": "texlab-x86_64-windows.zip",
+}
+
+PLATFORM = sublime.platform()
+SERVER_BINARY = "texlab.exe" if PLATFORM == "windows" else "texlab"
 
 
 class TextDocumentBuildParams(TypedDict):
@@ -39,60 +61,63 @@ def plugin_unloaded() -> None:
 class LspTexLabPlugin(LspPlugin):
     @classmethod
     def on_pre_start_async(cls, context: OnPreStartContext) -> None:
-        context.variables["texlab_bin"] = (
-            get_default_server_bin_path(str(cls.plugin_storage_path))
-            if PLATFORM_ARCH in PLATFORM_ARCH_TO_TARBALL
-            else "texlab"
+        server_bin = None
+        # only auto manage the server when the "command" uses it, on platforms which the official server supports
+        if context.configuration.command[:1] in (["${texlab_bin}"], ["$texlab_bin"]):
+            server_bin = cls._install_server(context.configuration)
+        # for unofficially supported platforms, users have to compile texlab by themselves
+        # and adjust the "command" to use the executable (or have it on the PATH)
+        context.variables["texlab_bin"] = str(server_bin) if server_bin else "texlab"
+
+    @classmethod
+    def _install_server(cls, configuration: ClientConfig) -> Path | None:
+        """
+        Installs the LSP server, unless already installed, and gets the path of its binary.
+
+        :returns:   The path of the server binary or `None` if there is no pre-built server for the current platform.
+        """
+
+        try:
+            asset = select_platform_asset(SERVER_ASSETS)
+        except UnsupportedPlatformError:
+            return None
+        url = cls._get_server_download_url(configuration, asset)
+        if not url:
+            return None
+
+        storage_dir = cls.plugin_storage_path
+        install_dir = InstallDirectory(
+            storage_dir,
+            "server",
+            SERVER_VERSION,
+            url,
+            # unversioned directories (named "{platform}-{arch}~{version}") used by previous releases
+            legacy_dirs=list(storage_dir.glob(f"{PLATFORM}-*~*")),
         )
-        if cls.needs_update_or_installation(context.configuration.command, context.variables):
-            cls.install_or_update()
+        server_dir = install_dir.install(
+            lambda path: download_and_extract(url, path, filename=asset, executables=[SERVER_BINARY])
+        )
+        return server_dir / SERVER_BINARY
 
-    @classmethod
-    def needs_update_or_installation(cls, command: list[str], variables: dict[str, str]) -> bool:
-        server_bin = command[0]
+    @staticmethod
+    def _get_server_download_url(configuration: ClientConfig, asset: str) -> str | None:
+        """
+        Gets the LSP server download URL.
 
-        # only auto manage platforms which the official server supports
-        if PLATFORM_ARCH in PLATFORM_ARCH_TO_TARBALL and server_bin in {
-            "${texlab_bin}",
-            "$texlab_bin",
-        }:
-            server_bin = sublime.expand_variables(server_bin, variables)
-            return not os.path.isfile(server_bin)
+        :param      asset:  The file name of the release asset
+        """
 
-        # for unofficial supported platforms, users have to compile texlab by themselves
-        # and adjust the "command" to use the executable
-        return False
+        url = configuration.root_settings.get("lsp_server_download_url")
+        if not isinstance(url, str) or not url:
+            return None
 
-    @classmethod
-    def install_or_update(cls) -> None:
-        cls._cleanup_cache()
-
-        is_download_ok = cls._prepare_server_bin()
-        if not is_download_ok:
-            raise RuntimeError("Unable to download the server binary...")
-
-    @classmethod
-    def _prepare_server_bin(cls) -> bool:
-        """Download the LSP server binary."""
-
-        server_dir = get_server_dir(str(cls.plugin_storage_path))
-        download_url = get_server_download_url(SERVER_VERSION, PLATFORM, ARCH)
-        if not download_url:
-            return False
-
-        tarball_name = download_url.split("/")[-1]
-        tarball_path = os.path.join(server_dir, tarball_name)
-
-        download(download_url, tarball_path)
-        decompress(tarball_path, server_dir)
-
-        return True
-
-    @classmethod
-    def _cleanup_cache(cls) -> None:
-        """Clean up this plugin's cache directory."""
-
-        shutil.rmtree(cls.plugin_storage_path, ignore_errors=True)
+        return url.format_map(
+            {
+                "version": SERVER_VERSION,
+                "version_without_v": SERVER_VERSION.lstrip("v"),
+                "tarball": asset,
+            }
+        )
 
 
 class LspTexlabForwardSearchCommand(LspTextCommand):
