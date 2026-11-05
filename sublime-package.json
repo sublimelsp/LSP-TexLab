@@ -1,0 +1,327 @@
+{
+  "contributions": {
+    "settings": [
+      {
+        "file_patterns": [
+          "/LSP-TexLab.sublime-settings"
+        ],
+        "schema": {
+          "$id": "sublime://settings/LSP-TexLab",
+          "allOf": [
+            {
+              "$ref": "sublime://settings/LSP-plugin-base"
+            },
+            {
+              "$ref": "sublime://settings/LSP-TexLab#/definitions/PluginConfig"
+            }
+          ],
+          "definitions": {
+            "PluginConfig": {
+              "properties": {
+                "lsp_server_download_url": {
+                  "type": "string",
+                  "default": "https://github.com/latex-lsp/texlab/releases/download/{version}/{tarball}",
+                  "markdownDescription": "URL template used to download the server. Change it to use a GitHub mirror.\n\nSupported placeholders: `{version}`, `{version_without_v}`, `{tarball}`."
+                },
+                "settings": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "texlab.auxDirectory": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "default": null,
+                      "markdownDeprecationMessage": "Use `texlab.build.auxDirectory` instead.",
+                      "markdownDescription": "Defines the directory containing the build artifacts."
+                    },
+                    "texlab.bibtexFormatter": {
+                      "markdownDescription": "BibTeX formatter to use.",
+                      "type": "string",
+                      "default": "texlab",
+                      "enum": [
+                        "none",
+                        "texlab",
+                        "latexindent",
+                        "tex-fmt"
+                      ]
+                    },
+                    "texlab.build.args": {
+                      "markdownDescription": "Additional arguments that are passed to the build tool.",
+                      "type": "array",
+                      "default": [
+                        "-pdf",
+                        "-interaction=nonstopmode",
+                        "-synctex=1",
+                        "%f"
+                      ]
+                    },
+                    "texlab.build.auxDirectory": {
+                      "markdownDescription": "Directory containing the aux files.",
+                      "type": "string",
+                      "default": "."
+                    },
+                    "texlab.build.executable": {
+                      "markdownDescription": "Path to a LaTeX build tool.",
+                      "type": "string",
+                      "default": "latexmk"
+                    },
+                    "texlab.build.filename": {
+                      "markdownDescription": "The base name of the output file.",
+                      "type": "string",
+                      "default": null
+                    },
+                    "texlab.build.forwardSearchAfter": {
+                      "markdownDescription": "Execute forward search after building",
+                      "type": "boolean",
+                      "default": false
+                    },
+                    "texlab.build.logDirectory": {
+                      "markdownDescription": "Directory containing the build log files.",
+                      "type": "string",
+                      "default": "."
+                    },
+                    "texlab.build.onSave": {
+                      "markdownDescription": "Build after saving a file",
+                      "type": "boolean",
+                      "default": false
+                    },
+                    "texlab.build.pdfDirectory": {
+                      "markdownDescription": "Directory containing the output file.",
+                      "type": "string",
+                      "default": "."
+                    },
+                    "texlab.build.useFileList": {
+                      "markdownDescription": "Use the .fls files as an additional input for project detection",
+                      "type": "boolean",
+                      "default": false
+                    },
+                    "texlab.chktex.additionalArgs": {
+                      "markdownDescription": "Additional arguments that are passed to ChkTeX",
+                      "type": "array",
+                      "default": []
+                    },
+                    "texlab.chktex.onEdit": {
+                      "markdownDescription": "Lint using chktex after changing a file",
+                      "type": "boolean",
+                      "default": false
+                    },
+                    "texlab.chktex.onOpenAndSave": {
+                      "markdownDescription": "Lint using chktex after opening and saving a file.",
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "texlab.completion.matcher": {
+                      "markdownDescription": "Matching algorithm used to filter the completion items.",
+                      "type": "string",
+                      "default": "fuzzy-ignore-case",
+                      "enum": [
+                        "fuzzy",
+                        "fuzzy-ignore-case",
+                        "prefix",
+                        "prefix-ignore-case"
+                      ]
+                    },
+                    "texlab.diagnostics.allowedPatterns": {
+                      "markdownDescription": "If specified, only diagnostics that match at least one of the specified patterns are displayed.",
+                      "type": "array",
+                      "default": []
+                    },
+                    "texlab.diagnostics.ignoredPatterns": {
+                      "markdownDescription": "If specified, only diagnostics that match none of the specified patterns are displayed.",
+                      "type": "array",
+                      "default": []
+                    },
+                    "texlab.diagnosticsDelay": {
+                      "type": "integer",
+                      "default": 300,
+                      "minimum": 0,
+                      "markdownDescription": "Delay in milliseconds before reporting diagnostics."
+                    },
+                    "texlab.experimental.citationCommands": {
+                      "markdownDescription": "Customize the list of commands that reference BibTeX entries.",
+                      "type": "array",
+                      "default": []
+                    },
+                    "texlab.experimental.enumEnvironments": {
+                      "markdownDescription": "Extends the list of environments considered as enumeration environments.",
+                      "type": "array",
+                      "default": []
+                    },
+                    "texlab.experimental.followPackageLinks": {
+                      "markdownDescription": "If specified, dependencies of packages are resolved and included in the dependency graph.",
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "texlab.experimental.glossaryReferenceCommands": {
+                      "markdownDescription": "Customize the list of commands that reference glossary entries.",
+                      "type": "array",
+                      "default": []
+                    },
+                    "texlab.experimental.labelDefinitionCommands": {
+                      "markdownDescription": "Customize the list of commands that define LaTeX labels.",
+                      "type": "array",
+                      "default": []
+                    },
+                    "texlab.experimental.labelDefinitionPrefixes": {
+                      "markdownDescription": "Customize the list of commands that define LaTeX labels with a prefix.",
+                      "type": "array",
+                      "default": []
+                    },
+                    "texlab.experimental.labelReferenceCommands": {
+                      "markdownDescription": "Customize the list of commands that reference LaTeX labels.",
+                      "type": "array",
+                      "default": []
+                    },
+                    "texlab.experimental.labelReferencePrefixes": {
+                      "markdownDescription": "Customize the list of commands that reference LaTeX labels with a prefix.",
+                      "type": "array",
+                      "default": []
+                    },
+                    "texlab.experimental.labelReferenceRangeCommands": {
+                      "markdownDescription": "Customize the list of \\crefrange-like commands.",
+                      "type": "array",
+                      "default": []
+                    },
+                    "texlab.experimental.mathEnvironments": {
+                      "markdownDescription": "Extends the list of environments considered as math environments.",
+                      "type": "array",
+                      "default": []
+                    },
+                    "texlab.experimental.verbatimEnvironments": {
+                      "markdownDescription": "Do not report diagnostics from these environments.",
+                      "type": "array",
+                      "default": []
+                    },
+                    "texlab.formatterLineLength": {
+                      "markdownDescription": "Maximum amount of characters per line (0 = disable).",
+                      "type": "integer",
+                      "default": 80
+                    },
+                    "texlab.forwardSearch.args": {
+                      "markdownDescription": "Additional arguments that are passed to the previewer.",
+                      "type": "array",
+                      "default": []
+                    },
+                    "texlab.forwardSearch.executable": {
+                      "markdownDescription": "Path to a PDF previewer that supports SyncTeX.",
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "default": null
+                    },
+                    "texlab.hover.symbols": {
+                      "markdownDescription": "Describe how to render symbol-like commands when hovering.",
+                      "type": "string",
+                      "default": "image",
+                      "enum": [
+                        "none",
+                        "glyph",
+                        "image"
+                      ]
+                    },
+                    "texlab.inlayHints.labelDefinitions": {
+                      "markdownDescription": "If specified, inlay hints are shown for \\label commands.",
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "texlab.inlayHints.labelReferences": {
+                      "markdownDescription": "If specified, inlay hints are shown for label references (e. g. \\ref).",
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "texlab.inlayHints.maxLength": {
+                      "markdownDescription": "If specified, inlay hints are truncated to the specified length.",
+                      "type": [
+                        "number",
+                        "null"
+                      ],
+                      "default": null
+                    },
+                    "texlab.latexFormatter": {
+                      "markdownDescription": "LaTeX formatter to use.",
+                      "type": "string",
+                      "default": "latexindent",
+                      "enum": [
+                        "none",
+                        "texlab",
+                        "latexindent",
+                        "tex-fmt"
+                      ]
+                    },
+                    "texlab.latexindent.local": {
+                      "markdownDescription": "Configures the --local flag of latexindent.",
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "default": null
+                    },
+                    "texlab.latexindent.modifyLineBreaks": {
+                      "markdownDescription": "Configures the --modifylinebreaks flag of latexindent.",
+                      "type": "boolean",
+                      "default": false
+                    },
+                    "texlab.latexindent.replacement": {
+                      "markdownDescription": "Adds the specified replacement flag to latexindent.",
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "default": null
+                    },
+                    "texlab.rootDirectory": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "default": null,
+                      "markdownDescription": "Defines the directory from which the source files get compiled.",
+                      "markdownDeprecationMessage": "No longer supported by the TexLab server."
+                    },
+                    "texlab.symbols.allowedPatterns": {
+                      "markdownDescription": "If specified, only symbols that match at least one of the specified patterns are displayed.",
+                      "type": "array",
+                      "default": []
+                    },
+                    "texlab.symbols.customEnvironments": {
+                      "markdownDescription": "Customize the list of environments that are considered as symbols.",
+                      "type": "array",
+                      "default": []
+                    },
+                    "texlab.symbols.ignoredPatterns": {
+                      "markdownDescription": "If specified, only symbols that match none of the specified patterns are displayed.",
+                      "type": "array",
+                      "default": []
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "file_patterns": [
+          "/*.sublime-project"
+        ],
+        "schema": {
+          "properties": {
+            "settings": {
+              "properties": {
+                "LSP": {
+                  "properties": {
+                    "LSP-TexLab": {
+                      "$ref": "sublime://settings/LSP-TexLab#/definitions/PluginConfig"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+}
